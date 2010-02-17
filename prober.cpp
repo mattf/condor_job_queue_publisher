@@ -17,9 +17,6 @@
  *
  ***************************************************************/
 
-// EXCEPT
-#define EXCEPT(...)
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -55,9 +52,8 @@ Prober::~Prober()
 void
 Prober::setJobQueueName(const char* jqn)
 {
-	if(!jqn) {
-		EXCEPT("Expecting jqn to be not null here\n");
-	}
+	assert(jqn);
+
 	strcpy(job_queue_name, jqn);
 }
 
@@ -155,7 +151,8 @@ Prober::probe(ClassAdLogEntry *curCALogEntry,
 	caLogParser.setFileDescriptor(job_queue_fd);
 	caLogParser.setNextOffset(0);
 	st = caLogParser.readLogEntry(op_type);
-	
+
+	if (FILE_FATAL_ERROR == st) { exit(1); }
 	if (st != FILE_READ_SUCCESS) {
 		return PROBE_ERROR;
 	}
@@ -163,10 +160,11 @@ Prober::probe(ClassAdLogEntry *curCALogEntry,
 	if ( caLogParser.getCurCALogEntry()->op_type !=
 		 CondorLogOp_LogHistoricalSequenceNumber )
 	{
-		EXCEPT("ERROR: quill prober expects first classad log entry to be "
+		printf("ERROR: quill prober expects first classad log entry to be "
 				"type %d, but sees %d instead.",
 				CondorLogOp_LogHistoricalSequenceNumber,
 				caLogParser.getCurCALogEntry()->op_type);
+		exit(1);
 	}
 
 	printf("first log entry: %s %s %s\n", 
@@ -190,6 +188,7 @@ Prober::probe(ClassAdLogEntry *curCALogEntry,
 	caLogParser.setNextOffset(curCALogEntry->offset);
 	st = caLogParser.readLogEntry(op_type);
 	
+	if (FILE_FATAL_ERROR == st) { exit(1); }
 	if (st != FILE_READ_EOF && st != FILE_READ_SUCCESS) {
 		return PROBE_ERROR;
 	}

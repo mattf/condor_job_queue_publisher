@@ -114,6 +114,7 @@ JobLogReader::IncrementalLoad()
 			}
 		}
 	}while(err == FILE_READ_SUCCESS);
+	if (FILE_FATAL_ERROR == err) { exit(1); }
 	if (err != FILE_READ_EOF) {
 		printf("error reading from %s: %d, %d\n",GetJobLogFileName(),err,errno);
 		return false;
