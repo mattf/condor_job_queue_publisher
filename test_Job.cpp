@@ -67,5 +67,9 @@ main(int argc, char **argv)
 	TEST(attr.GetType() == attr4_value_type);
 	TEST(attr.GetValue() == attr4_value);
 
+	job0.Delete(attr2_name);
+	TEST(!job0.Get(attr2_name, attr));
+	TEST(!job1.Get(attr2_name, attr));
+
 	return 0;
 }
