@@ -1,3 +1,6 @@
+#ifndef _ATTRIBUTEVALUETYPE_H
+#define _ATTRIBUTEVALUETYPE_H
+
 enum AttributeValueType {
 	EXPR_TYPE = 0,
 	INTEGER_TYPE = 1,
@@ -5,3 +8,5 @@ enum AttributeValueType {
 	STRING_TYPE = 3,
 	UNKNOWN_TYPE = 4
 };
+
+#endif

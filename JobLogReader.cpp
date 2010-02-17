@@ -20,6 +20,8 @@
 
 #include "JobLogReader.h"
 
+#include <stdlib.h>
+
 #include <string>
 
 #include <errno.h>
