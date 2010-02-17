@@ -9,12 +9,12 @@ TEST_DETECTTYPE=test_DetectType
 TEST_DETECTTYPE_OBJS=test_DetectType.o Utils.o
 
 TEST_JOB=test_Job
-TEST_JOB_OBJS= test_Job.o Utils.o Job.o
+TEST_JOB_OBJS=test_Job.o Utils.o Job.o
 
 %-pic.o: %.cpp
 	gcc -fpic -c $< -o $@
 
-all: $(LIBRARY) $(TEST_DETECTTYPE) $(TEST_JOB)
+all: $(LIBRARY) $(JOB_PUBLISHER) $(TEST_DETECTTYPE) $(TEST_JOB)
 
 clean:
 	rm -f $(LIBRARY) $(LIBRARY_OBJS)
