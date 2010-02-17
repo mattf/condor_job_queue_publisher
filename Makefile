@@ -1,3 +1,5 @@
+CXXFLAGS=-g
+
 LIBRARY=libclassadlogreader.so.1.0.0
 LIBRARY_OBJS=JobLogReader-pic.o classadlogentry-pic.o prober-pic.o classadlogparser-pic.o
 
@@ -23,13 +25,13 @@ clean:
 	rm -f $(TEST_JOB) $(TEST_JOB_OBJS)
 
 $(LIBRARY): $(LIBRARY_OBJS)
-	gcc -shared -Wl,-soname,$@ -o $@ $^
+	gcc -g -shared -Wl,-soname,$@ -o $@ $^
 
 $(JOB_PUBLISHER): $(JOB_PUBLISHER_OBJS) $(LIBRARY)
-	g++ -g -o $@ $^ $(JOB_PUBLISHER_LIBS)
+	g++ $(LDFLAGS) -o $@ $^ $(JOB_PUBLISHER_LIBS)
 
 $(TEST_DETECTTYPE): $(TEST_DETECTTYPE_OBJS)
-	g++ -g -o $@ $^
+	g++ $(LDFLAGS) -g -o $@ $^
 
 $(TEST_JOB): $(TEST_JOB_OBJS)
-	g++ -g -o $@ $^
+	g++ $(LDFLAGS) -g -o $@ $^
