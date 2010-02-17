@@ -25,6 +25,23 @@ Attribute::Attribute(AttributeValueType _type, const string _value):
 	m_value(_value)
 { }
 
+Attribute::Attribute()
+{
+}
+
+Attribute::Attribute(const Attribute &_attribute)
+{
+	*this = _attribute;
+}
+
+Attribute &Attribute::operator=(const Attribute &_attribute)
+{
+	m_type = _attribute.m_type;
+	m_value = _attribute.m_value;
+
+	return *this;
+}
+
 Attribute::~Attribute()
 {
 }
@@ -68,11 +85,6 @@ Job &Job::operator=(const Job &_job)
 
 Job::~Job()
 {
-	for (AttributeMapType::iterator i = m_attributes.begin();
-		 m_attributes.end() != i;
-		 i++) {
-		delete (*i).second;
-	}
 }
 
 const string
@@ -82,7 +94,7 @@ Job::GetKey() const
 }
 
 bool
-Job::Get(const string _name, const Attribute *&attribute) const
+Job::Get(const string _name, Attribute &attribute) const
 {
 		// Lookup locally, fall back on parent
 
@@ -110,11 +122,7 @@ Job::Set(const string _name, const string _value)
 			// XXX: Error?
 	}
 
-	AttributeMapType::iterator element = m_attributes.find(_name);
-	if (m_attributes.end() != element) {
-		delete (*element).second;
-	}
-	m_attributes[_name] = new Attribute(type, _value);
+	m_attributes[_name] = Attribute(type, _value);
 }
 
 void
