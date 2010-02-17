@@ -74,7 +74,7 @@ JobPublisherJobLogConsumer::NewClassAd(const char *_key,
 		int cluster, proc;
 		sscanf(_key, "%d.%d", cluster, proc); // XXX
 
-		char _cluster_key[15]; // ceiling(log10(2^32)) + 4 + NULL = 15
+		char _cluster_key[15]; // ceiling(log(2^32)) + len(0.-1) + NULL = 15
 		sprintf(_cluster_key, "0%d.-1", cluster); // XXX
 
 		string cluster_key = _cluster_key;
