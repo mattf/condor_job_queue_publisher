@@ -29,8 +29,6 @@ using std::string;
 using std::map;
 using std::set;
 
-class SubmissionObject;
-
 class Attribute
 {
 public:
