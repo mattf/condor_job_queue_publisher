@@ -21,8 +21,7 @@
 #define _CLASSADLOGPARSER_H_
 
 #include <limits.h> // for _POSIX_PATH_MAX
-
-#include "condor_open.h"
+#include <stdio.h>
 
 #include "quill_enums.h"
 

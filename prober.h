@@ -20,6 +20,8 @@
 #ifndef _PROBER_H_
 #define _PROBER_H_
 
+#include <time.h>
+
 #include "quill_enums.h"
 
 //! Prober

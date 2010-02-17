@@ -24,8 +24,6 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "condor_open.h"
-
 #include "classadlogentry.h"
 #include "classadlogparser.h"
 
@@ -113,7 +111,7 @@ ClassAdLogParser::setNextOffset(long offset)
 FileOpErrCode 
 ClassAdLogParser::openFile() {
     // open a job_queue.log file
-    log_fp = safe_fopen_wrapper(job_queue_name, "r");
+    log_fp = fopen(job_queue_name, "r");
 
     if (log_fp == NULL) {
         printf("[QUILL] Unable to open the job_queue.log file!\n");
