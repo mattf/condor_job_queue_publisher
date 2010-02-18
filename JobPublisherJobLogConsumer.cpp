@@ -81,17 +81,15 @@ JobPublisherJobLogConsumer::NewClassAd(const char *_key,
 
 		JobCollectionType::iterator element = g_jobs.find(cluster_key);
 
-        // TODO this code assumes that we will always get the parent 
-        // classad before its child from the job log...this is not strictly
-        // guaranteed (e.g., compressed log?)
+		Job parent;
 		if (g_jobs.end() == element) {
-            // didn't find an existing job so create a new one
-			g_jobs[cluster_key] = Job(key, NULL);
+			parent = Job(cluster_key, NULL);
+			g_jobs[cluster_key] = parent;
 		} else {
-            // found an existing job - we'll assume it is the target parent
-            // of this new child so we need to get its job ad first
-            g_jobs[key] = Job(key, &(*element).second);
+			parent = (*element).second;
 		}
+
+		g_jobs[key] = Job(key, &parent);
 	}
 
 	return true;
@@ -105,13 +103,14 @@ JobPublisherJobLogConsumer::DestroyClassAd(const char *_key)
 	return true;
 }
 
-
 bool
 JobPublisherJobLogConsumer::SetAttribute(const char *_key,
 									  const char *_name,
 									  const char *_value)
 {
-	JobCollectionType::iterator element = g_jobs.find(_key);
+	string key = _key, name = _name, value = _value;
+
+	JobCollectionType::iterator element = g_jobs.find(key);
 
 	if (g_jobs.end() == element) {
 		printf("error reading %s: no such job '%s' for '%s = %s'\n",
@@ -119,7 +118,7 @@ JobPublisherJobLogConsumer::SetAttribute(const char *_key,
 		return false;
 	}
 
-	(*element).second.Set(_name, _value);
+	(*element).second.Set(name, value);
 
 	return true;
 }
