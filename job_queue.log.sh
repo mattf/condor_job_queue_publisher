@@ -82,6 +82,7 @@ function write_cluster() {
 function write_job() {
    i=$1; j=$2
 
+   echo "101 $i.$j Job Machine"
    echo "103 $i.$j AutoCluster 3"
    echo "103 $i.$j AutoClusterAttrs \"ImageSize,JobUniverse,JobStart,LastPeriodicCheckpoint,LastCheckpointPlatform,NumCkpts,RequestCpus,RequestMemory,RequestDisk,DiskUsage,FileSystemDomain,Requirements,NiceUser,ConcurrencyLimits\""
    echo "103 $i.$j BytesRecvd 0.000000"
@@ -115,6 +116,7 @@ function write_job() {
    echo "103 $i.$j EnteredCurrentStatus $(date +%s)"
 }
 
+echo "107 28 CreationTimestamp $(date +%s)" >> $LOG
 
 do_cluster=0; cluster=0; proc=0; inc_cluster=1;
 while [ $cluster -lt 100 ]; do
