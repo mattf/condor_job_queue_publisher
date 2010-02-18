@@ -116,23 +116,41 @@ function write_job() {
    echo "103 $i.$j EnteredCurrentStatus $(date +%s)"
 }
 
+function write_delete() {
+   i=$1; j=$2
+
+   echo "105"
+   echo "102 $i.$j"
+   echo "106"
+}
+
 echo "107 28 CreationTimestamp $(date +%s)" >> $LOG
+
+#RANDOM=1
 
 do_cluster=0; cluster=0; proc=0; inc_cluster=1;
 while [ $cluster -lt 100 ]; do
    if [ $inc_cluster -eq 1 ]; then
       if [ $do_cluster -eq 1 ]; then
          write_cluster $cluster >> $LOG
+         #echo write_cluster $cluster
       fi
       cluster=$((cluster + 1)); proc=0; do_cluster=1
    fi
 
    if [ $do_cluster -eq 1 -a $((RANDOM % 3)) -eq 1 ]; then
       write_cluster $cluster >> $LOG
+      #echo write_cluster $cluster
       do_cluster=0
    fi
 
    write_job $cluster $proc >> $LOG
+   #echo write_job $cluster $proc
+
+   if [ $((RANDOM % 7)) -eq 1 -a $proc -eq 2 ]; then
+      write_delete $cluster $((RANDOM % (proc - 1) + 1))
+      #echo write_delete $cluster $((RANDOM % (proc - 1) + 1))
+   fi
 
 #   sleep 1
 
