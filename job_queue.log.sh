@@ -150,9 +150,9 @@ function write_job() {
 function write_delete() {
    i=$1; j=$2
 
-   echo "105"
+   echo "105 "
    echo "102 $i.$j"
-   echo "106"
+   echo "106 "
 }
 
 echo "107 28 CreationTimestamp $(date +%s)" >> $LOG
