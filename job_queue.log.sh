@@ -1,5 +1,36 @@
 #!/bin/sh
 
+# A) cluster -> job
+#cluster 1
+#job 1.0
+
+# B) (A) -> delete
+#cluster 2
+#job 2.0
+#delete 2.0
+
+# C) job -> cluster
+#job 3.0
+#cluster 3
+
+# D) (C) -> delete
+#job 4.0
+#cluster 4
+#delete 4.0
+
+# E) job -> delete -> cluster
+#job 5.0
+#delete 5.0
+#cluster 5
+
+# We should never see delete first, because you cannot delete a
+# job/cluster that does not already exist and on compression deletes
+# are filtered out. Deletion of a cluster deletes all jobs and then
+# the cluster, making it no different than a job deletion. (C) should
+# only occur because of a compression. (E) may not be possible since
+# the job -> cluster pattern should only occur on compression and
+# deletes are filtered from compressions.
+
 LOG=job_queue.log.gen
 
 function write_cluster() {
