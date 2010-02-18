@@ -179,7 +179,7 @@ while [ $cluster -lt 100 ]; do
    #echo write_job $cluster $proc
 
    if [ $((RANDOM % 7)) -eq 1 -a $proc -eq 2 ]; then
-      write_delete $cluster $((RANDOM % (proc - 1) + 1))
+      write_delete $cluster $((RANDOM % (proc - 1) + 1)) >> $LOG
       #echo write_delete $cluster $((RANDOM % (proc - 1) + 1))
    fi
 
