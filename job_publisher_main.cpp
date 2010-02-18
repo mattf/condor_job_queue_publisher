@@ -34,6 +34,10 @@ int main(int /* argc */, char * /* argv */ [])
 //		host = strdup("localhost");
 //	}
 
+	reader->Poll();
+
+	Dump();
+
 	return 0;
 }
 
@@ -44,7 +48,7 @@ main_config( bool /* is_full */ )
 {
 	printf("main_config() called\n");
 
-	reader->SetJobLogFileName("XXX");
+	reader->SetJobLogFileName("job_queue.log.gen");
 
 	return 0;
 }
@@ -94,5 +98,10 @@ Dump()
 {
 	printf("***BEGIN DUMP***\n");
 	printf("Total number of jobs: %d\n", g_jobs.size());
+//	for (JobCollectionType::const_iterator i = g_jobs.begin();
+//		 g_jobs.end() != i;
+//		 i++) {
+//		printf("%s %s\n", (*i).first.c_str(), (*i).second.GetKey().c_str());
+//	}
 	printf("***END DUMP***\n");
 }
