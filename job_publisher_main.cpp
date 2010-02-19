@@ -76,13 +76,13 @@ parse_args(int argc, char *argv[],
 		usage(argv);
 	}
 
-	if (optind < argc) {
-		syslog(LOG_ERR, "unknown arguments: ");
-		while (optind < argc) {
-			syslog(LOG_ERR, "%s ", argv[optind++]);
-		}
-		usage(argv);
-	}
+//	if (optind < argc) {
+//		syslog(LOG_ERR, "unknown arguments: ");
+//		while (optind < argc) {
+//			syslog(LOG_ERR, "%s ", argv[optind++]);
+//		}
+//		usage(argv);
+//	}
 }
 
 int main(int argc, char *argv[])
