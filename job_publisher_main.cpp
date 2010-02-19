@@ -18,7 +18,8 @@ void Dump();
 void
 usage(char *argv[])
 {
-	printf("usage: %s "
+	syslog(LOG_ERR,
+		   "usage: %s "
 		   "--file <job_queue.log> "
 		   "[--host <broker host>] "
 		   "[--port <broker port>]\n",
