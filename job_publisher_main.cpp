@@ -3,57 +3,107 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <unistd.h>
+#include <getopt.h>
+
 #include "JobLogReader.h"
 #include "JobPublisherJobLogConsumer.h"
 
 #include "Globals.h"
 
-JobLogReader *reader;
-JobPublisherJobLogConsumer *consumer;
-
 void Dump();
 
-int main_config(bool is_full);
-
-
-int main(int /* argc */, char * /* argv */ [])
+void
+usage(char *argv[])
 {
-	printf("main() called\n");
+	printf("usage: %s "
+		   "--file <job_queue.log> "
+		   "[--host <broker host>] "
+		   "[--port <broker port>]\n",
+		   argv[0]);
+	exit(1);
+}
 
-	consumer = new JobPublisherJobLogConsumer();
+void
+parse_args(int argc, char *argv[], string &host, int &port, string &file)
+{
+	static struct option options[] = {
+		{"host", 1, NULL, 'h'},
+		{"port", 1, NULL, 'p'},
+		{"file", 1, NULL, 'f'},
+		{NULL, NULL, NULL, NULL}
+	};
 
-	reader = new JobLogReader(consumer);
+	int c;
+	while (1) {
+		c = getopt_long(argc, argv, ":h:p:f:", options, NULL);
+		if (-1 == c) break;
 
-	main_config(true);
+		switch (c) {
+		case 'h':
+			host = optarg;
+			break;
+		case 'p':
+			port = (int) strtol(optarg, NULL, 10);
+			if (0 == port) {
+				printf("invalid port: %s\n", optarg);
+				usage(argv);
+			}
+			break;
+		case 'f':
+			file = optarg;
+			break;
+		case ':':
+			printf("%s requires an argument\n", argv[optind - 1]);
+			usage(argv);
+			break;
+		case '?':
+			printf("unknown argument: %s\n", argv[optind - 1]);
+			usage(argv);
+			break;
+		default:
+			usage(argv);
+			break;
+		}
+	}
 
-	const char *host = "localhost";
+	if (file.empty()) {
+		printf("--file required\n");
+		usage(argv);
+	}
+
+	if (optind < argc) {
+		printf("unknown arguments: ");
+		while (optind < argc) {
+			printf("%s ", argv[optind++]);
+		}
+		printf("\n");
+		usage(argv);
+	}
+}
+
+int main(int argc, char *argv[])
+{
+	string file;
+	string host = "localhost";
 	int port = 5672;
 
-//	port = param_integer("QMF_BROKER_PORT", 5672);
-//	if (NULL == (host = param("QMF_BROKER_HOST"))) {
-//		host = strdup("localhost");
-//	}
+	parse_args(argc, argv, host, port, file);
 
-	reader->Poll();
+	printf("config -- host = %s; port: %d; file: %s\n",
+		   host.c_str(), port, file.c_str());
+
+	JobPublisherJobLogConsumer *consumer = new JobPublisherJobLogConsumer();
+	JobLogReader *reader = new JobLogReader(consumer);
+
+	reader->SetJobLogFileName(file);
+
+//	reader->Poll();
 
 	Dump();
 
 	return 0;
 }
-
-//-------------------------------------------------------------
-
-int 
-main_config( bool /* is_full */ )
-{
-	printf("main_config() called\n");
-
-	reader->SetJobLogFileName("job_queue.log.gen");
-
-	return 0;
-}
-
-//-------------------------------------------------------------
 
 void Stop()
 {
