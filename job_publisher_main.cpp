@@ -15,6 +15,8 @@
 
 void Dump();
 
+bool dump = false;
+
 void
 usage(char *argv[])
 {
@@ -35,12 +37,13 @@ parse_args(int argc, char *argv[],
 		{"host", 1, NULL, 'h'},
 		{"port", 1, NULL, 'p'},
 		{"file", 1, NULL, 'f'},
+		{"dump", 0, NULL, 'd'},
 		{NULL, NULL, NULL, NULL}
 	};
 
 	int c;
 	while (1) {
-		c = getopt_long(argc, argv, ":h:p:f:", options, NULL);
+		c = getopt_long(argc, argv, ":h:p:f:d", options, NULL);
 		if (-1 == c) break;
 
 		switch (c) {
@@ -56,6 +59,9 @@ parse_args(int argc, char *argv[],
 			break;
 		case 'f':
 			file = optarg;
+			break;
+		case 'd':
+			dump = true;
 			break;
 		case ':':
 			syslog(LOG_ERR, "%s requires an argument\n", argv[optind - 1]);
@@ -106,9 +112,13 @@ int main(int argc, char *argv[])
 
 	reader->SetJobLogFileName(file);
 
-//	reader->Poll();
+	reader->Poll();
 
-	Dump();
+	if (dump) {
+		Dump();
+		delete reader;
+		return 0;
+	}
 
 	delete reader;
 
@@ -120,10 +130,14 @@ Dump()
 {
 	syslog(LOG_DEBUG, "***BEGIN DUMP***");
 	syslog(LOG_DEBUG, "Total number of jobs: %d", g_jobs.size());
-//	for (JobCollectionType::const_iterator i = g_jobs.begin();
-//		 g_jobs.end() != i;
-//		 i++) {
+	string jobs = "Jobs: ";
+	for (JobCollectionType::const_iterator i = g_jobs.begin();
+		 g_jobs.end() != i;
+		 i++) {
+		jobs += (*i).first;
+		jobs += " ";
 //		printf("%s %s\n", (*i).first.c_str(), (*i).second.GetKey().c_str());
-//	}
+	}
+	syslog(LOG_DEBUG, "%s", jobs.c_str());
 	syslog(LOG_DEBUG, "***END DUMP***");
 }
