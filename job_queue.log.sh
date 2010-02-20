@@ -164,7 +164,7 @@ echo "107 28 CreationTimestamp $(date +%s)" >> $LOG
 #RANDOM=1
 
 do_cluster=0; cluster=0; proc=0; inc_cluster=1;
-while [ $((cluster + inc_cluster)) -lt 100 ]; do
+while [ $cluster -lt 100 ]; do
    if [ $inc_cluster -eq 1 ]; then
       if [ $do_cluster -eq 1 ]; then
          write_cluster $cluster >> $LOG
@@ -191,6 +191,9 @@ while [ $((cluster + inc_cluster)) -lt 100 ]; do
 
    proc=$((proc+1))
 
-   test $((RANDOM % 10)) -ne 1
-   inc_cluster=$?
+   inc_cluster=$((RANDOM % 10))
 done
+if [ $do_cluster -eq 1 ]; then
+   write_cluster $cluster >> $LOG
+   #echo write_cluster $cluster
+fi
