@@ -31,7 +31,11 @@
 # the job -> cluster pattern should only occur on compression and
 # deletes are filtered from compressions.
 
-LOG=job_queue.log.gen
+if [ -z $1 ]; then
+   LOG=job_queue.log.gen
+else
+   LOG=$1
+fi
 
 function write_cluster() {
    i=$1
@@ -160,7 +164,7 @@ echo "107 28 CreationTimestamp $(date +%s)" >> $LOG
 #RANDOM=1
 
 do_cluster=0; cluster=0; proc=0; inc_cluster=1;
-while [ $cluster -lt 100 ]; do
+while [ $((cluster + inc_cluster)) -lt 100 ]; do
    if [ $inc_cluster -eq 1 ]; then
       if [ $do_cluster -eq 1 ]; then
          write_cluster $cluster >> $LOG
@@ -187,5 +191,6 @@ while [ $cluster -lt 100 ]; do
 
    proc=$((proc+1))
 
-   inc_cluster=$((RANDOM % 10))
+   test $((RANDOM % 10)) -ne 1
+   inc_cluster=$?
 done
