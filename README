@@ -1,0 +1,104 @@
+ClassAd Log Reader Library -
+
+
+Job Publisher --
+
+Memory Performance -
+
+$ wc ../job_queue.log.gen
+  5560543  25070492 237362355 ../job_queue.log.gen
+$ grep ^103 ../job_queue.log.gen | sed 's/[^ ]* [^ ]* \(.*\)/\1/' > data
+$ wc data 
+  5395619  13629622 170990138 data
+$ sort data > data.sorted
+$ wc data.sorted 
+  5395619  13629622 170990138 data.sorted
+$ uniq -c data.sorted > data.uniq
+$ wc data.uniq 
+ 183516  550606 8916180 data.uniq
+$ sort -n data.uniq > data.uniq.sorted
+$ wc data.uniq.sorted 
+ 183516  550606 8916180 data.uniq.sorted
+$ l ../job_queue.log.gen data data.sorted data.uniq data.uniq.sorted 
+227M -rw-------. 1 matt matt 227M 2010-02-20 09:08 ../job_queue.log.gen
+164M -rw-------. 1 matt matt 164M 2010-02-21 09:13 data
+164M -rw-------. 1 matt matt 164M 2010-02-21 09:16 data.sorted
+8.6M -rw-------. 1 matt matt 8.6M 2010-02-21 09:20 data.uniq
+8.6M -rw-------. 1 matt matt 8.6M 2010-02-21 09:23 data.uniq.sorted
+
+string
+$ ps o pid,vsz,rss,size,cmd $(pidof job_publisher)
+  PID    VSZ   RSS    SZ CMD
+10729 573184 571112 570220 ./job_publisher --file ../job_queue.log.gen
+
+flyweight for Attribute::m_value
+$ ps o pid,vsz,rss,size,cmd $(pidof job_publisher)
+  PID    VSZ   RSS    SZ CMD
+10595 383112 381036 380128 ./job_publisher --file ../job_queue.log.gen
+
+flyweight for Attribute::m_value and name
+$ ps o pid,vsz,rss,size,cmd $(pidof job_publisher)
+  PID    VSZ   RSS    SZ CMD
+ 2974 206636 204552 203652 ./job_publisher --file ../job_queue.log.gen
+
+  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  DATA COMMAND
+ 2974 matt      20   0  201m 199m 1000 S  0.0 10.0   2:12.77 198m job_publisher 
+
+
+data.id -
+
+$ grep ^103 ../job_queue.log.gen | colrm 1 4 > data.id                 
+
+$ wc data.id 
+  5395619  19025241 211968013 data.id
+$ l data.id 
+203M -rw-------. 1 matt matt 203M 2010-02-21 09:45 data.id
+
+jobs: $(awk '{print $1}' < data.id | sort -u | wc -l) ==> 161149
+attrs: $(grep "103" job_queue.log.sh | grep -v "103 0" | wc -l) ==> 31
+
+
+memory_performance with string over data.id -
+
+$ top
+ PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  DATA COMMAND
+ 3816 matt      20   0  557m 555m  844 S  0.0 27.7   0:26.00 555m memory_performa  
+$ ps o pid,vsz,rss,size,cmd $(pidof memory_performance)
+  PID    VSZ   RSS    SZ CMD
+ 3816 571356 569260 568528 ./memory_performance data.id
+$ pmap -d $(pidof memory_performance) | tail -n1
+mapped: 571356K    writeable/private: 568552K    shared: 0K
+
+memory_performance with flyweight<string> over data.id -
+
+$ top
+  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  DATA COMMAND
+ 3964 matt      20   0  192m 190m  964 S  0.0  9.5   1:35.42 189m memory_performa
+ ps o pid,vsz,rss,size,cmd $(pidof memory_performance)
+  PID    VSZ   RSS    SZ CMD
+ 3964 196728 194640 193780 ./memory_performance data.id
+$ pmap -d $(pidof memory_performance) | tail -n1
+mapped: 196728K    writeable/private: 193808K    shared: 0K
+
+
+memory_performance structures -
+
+trypedef string Id;
+typedef string Name;
+typedef string Value;
+typedef map<Name, Value> Job;
+typedef map<Id, Job> Jobs;
+
+Jobs has 161149 elements (Id, Job)
+each Job has 31 elements (Name, Value)
+
+161149 * 31 = 4995619 (Name, Value)
+4995619 * 2 = 9991238 + 161149 = 10152387 objects
+
+
+data holds about 10MB of unique string data, memory_performance
+consumes 190MB to represent the data in memory. majority of memory
+usage from 10M objects holding string data.
+
+if using a char * on a 64 bit machine, 10M objects is ~75MB
+
