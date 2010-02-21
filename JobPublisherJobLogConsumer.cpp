@@ -32,26 +32,7 @@ JobPublisherJobLogConsumer::~JobPublisherJobLogConsumer()
 void
 JobPublisherJobLogConsumer::Reset()
 {
-		// When deleting jobs, to avoid problems with jobs referencing
-		// deleted clusters, we must be sure to delete the clusters
-		// last
-
-/*
-	for (JobCollectionType::iterator i = g_jobs.begin();
-		 g_jobs.end() != i; i++) {
-			// Skip clusters for now
-		if ('0' != (*i).second->GetKey()[0]) {
-			delete (*i).second;
-			g_jobs.erase(i);
-		}
-	}
-
-	for (JobCollectionType::iterator i = g_jobs.begin();
-		 g_jobs.end() != i; i++) {
-		delete (*i).second;
-		g_jobs.erase(i);
-	}
-*/
+	g_jobs.clear();
 }
 
 bool
