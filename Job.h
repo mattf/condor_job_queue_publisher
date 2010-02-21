@@ -25,9 +25,14 @@
 
 #include "AttributeValueType.h"
 
+#include <boost/flyweight.hpp>
+
 using std::string;
 using std::map;
 using std::set;
+
+using namespace ::boost;
+using namespace ::boost::flyweights;
 
 class Attribute
 {
@@ -43,13 +48,15 @@ public:
 
 private:
 	AttributeValueType m_type;
-	string m_value;
+	flyweight<string> m_value;
+//	string m_value;
 };
 
 class Job
 {
 public:
-	typedef map<const string, Attribute> AttributeMapType;
+//	typedef map<const string, Attribute> AttributeMapType;
+	typedef map<flyweight<string>, Attribute> AttributeMapType;
 
 	Job(const string _key,
 		const Job *_parent);
