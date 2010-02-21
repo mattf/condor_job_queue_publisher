@@ -112,12 +112,17 @@ int main(int argc, char *argv[])
 
 	reader->SetJobLogFileName(file);
 
-	reader->Poll();
+	while (1) {
+		reader->Poll();
 
-	if (dump) {
-		Dump();
-		delete reader;
-		return 0;
+		if (dump) {
+			Dump();
+			consumer->Reset();
+			delete reader;
+			return 0;
+		}
+
+		sleep(5);
 	}
 
 	delete reader;
@@ -136,7 +141,6 @@ Dump()
 		 i++) {
 		jobs += (*i).first;
 		jobs += " ";
-//		printf("%s %s\n", (*i).first.c_str(), (*i).second.GetKey().c_str());
 	}
 	syslog(LOG_DEBUG, "%s", jobs.c_str());
 	syslog(LOG_DEBUG, "***END DUMP***");
