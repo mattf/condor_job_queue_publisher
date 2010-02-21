@@ -8,10 +8,9 @@ using namespace ::boost::flyweights;
 
 using namespace std;
 
-//typedef string Id;
 //typedef string Name;
 //typedef string Value;
-typedef flyweight<string> Id;
+typedef string Id;
 typedef flyweight<string> Name;
 typedef flyweight<string> Value;
 typedef map<Name, Value> Job;
