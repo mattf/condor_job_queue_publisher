@@ -135,6 +135,7 @@ Dump()
 {
 	syslog(LOG_DEBUG, "***BEGIN DUMP***");
 	syslog(LOG_DEBUG, "Total number of jobs: %d", g_jobs.size());
+/*
 	string jobs = "Jobs: ";
 	for (JobCollectionType::const_iterator i = g_jobs.begin();
 		 g_jobs.end() != i;
@@ -143,5 +144,21 @@ Dump()
 		jobs += " ";
 	}
 	syslog(LOG_DEBUG, "%s", jobs.c_str());
+*/
+	string line;
+	for (JobCollectionType::const_iterator i = g_jobs.begin();
+		 g_jobs.end() != i;
+		 i++) {
+		for (Job::AttributeMapType::const_iterator j = (*i).second.GetAttributes().begin();
+			 (*i).second.GetAttributes().end() != j;
+			 j++) {
+			line = (*i).first;
+			line += " ";
+			line += (*j).first;
+			line += " ";
+			line += (*j).second.GetValue();
+			syslog(LOG_DEBUG, "-> %s", line.c_str());
+		}
+	}
 	syslog(LOG_DEBUG, "***END DUMP***");
 }
