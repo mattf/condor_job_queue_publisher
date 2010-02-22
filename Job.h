@@ -36,7 +36,8 @@ class Job
 {
 public:
 //	typedef map<const string, Attribute> AttributeMapType;
-	typedef map<flyweight<string>, flyweight<string> > AttributeMapType;
+	typedef flyweight<string> fstring;
+	typedef map<fstring, fstring> AttributeMapType;
 
 	Job(const string _key,
 		const Job *_parent);
@@ -47,7 +48,7 @@ public:
 
 	const string GetKey() const;
 
-	bool Get(const string name, flyweight<string> &attribute) const;
+	bool Get(const string name, fstring &attribute) const;
 	void Set(const string name, const string value);
 	void Delete(const string name);
 

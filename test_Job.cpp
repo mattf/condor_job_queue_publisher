@@ -28,7 +28,7 @@ main(int argc, char **argv)
 	job0.Set(attr2_name, attr2_value);
 	job0.Set(attr3_name, attr3_value);
 
-	flyweight<string> attr;
+	Job::fstring attr;
 	TEST(job0.Get(attr0_name, attr));
 //	TEST(attr.GetType() == attr0_value_type);
 //	TEST(attr.GetValue() == attr0_value);

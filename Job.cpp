@@ -53,12 +53,12 @@ Job::GetKey() const
 }
 
 bool
-Job::Get(const string _name, flyweight<string> &attribute) const
+Job::Get(const string _name, fstring &attribute) const
 {
 		// Lookup locally, fall back on parent
 
 	AttributeMapType::const_iterator element =
-		m_attributes.find(flyweight<string>(_name));
+		m_attributes.find(fstring(_name));
 
 	if (m_attributes.end() == element) {
 		if (m_parent) {
@@ -76,13 +76,13 @@ Job::Get(const string _name, flyweight<string> &attribute) const
 void
 Job::Set(const string _name, const string _value)
 {
-	m_attributes[flyweight<string>(_name)] = flyweight<string>(_value);
+	m_attributes[fstring(_name)] = fstring(_value);
 }
 
 void
 Job::Delete(const string _name)
 {
-	m_attributes.erase(flyweight<string>(_name));
+	m_attributes.erase(fstring(_name));
 }
 
 const Job::AttributeMapType &
