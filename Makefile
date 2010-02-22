@@ -6,7 +6,7 @@ LIBRARY_OBJS=JobLogReader-pic.o classadlogentry-pic.o prober-pic.o classadlogpar
 
 JOB_PUBLISHER=job_publisher
 JOB_PUBLISHER_OBJS=job_publisher_main.o JobPublisherJobLogConsumer.o Utils.o Job.o Globals.o
-JOB_PUBLISHER_LIBS=$(LIBRARY)
+JOB_PUBLISHER_LIBS=$(LIBRARY) -lqpidcommon -lqpidclient
 
 TEST_DETECTTYPE=test_DetectType
 TEST_DETECTTYPE_OBJS=test_DetectType.o Utils.o

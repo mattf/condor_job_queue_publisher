@@ -10,12 +10,10 @@
 
 #include <syslog.h>
 
-/*
 #include <qpid/messaging/Connection.h>
 #include <qpid/messaging/Message.h>
 #include <qpid/messaging/Sender.h>
 #include <qpid/messaging/Session.h>
-*/
 
 #include "JobLogReader.h"
 #include "JobPublisherJobLogConsumer.h"
@@ -24,13 +22,13 @@
 
 #include "Config.h"
 
+using namespace qpid::messaging;
+
 void Dump();
 
 void PublishJob(const string &key);
 
-/*
 Sender sender;
-*/
 
 void
 usage(char *argv[])
@@ -103,10 +101,8 @@ parse_args(int argc, char *argv[], Config &config)
 
 int main(int argc, char *argv[])
 {
-/*
 	Connection connection;
 	Session session;
-*/
 
 	Config config;
 	config.broker = "amqp:tcp:127.0.0.1:5672";
@@ -120,13 +116,11 @@ int main(int argc, char *argv[])
 		   config.broker.c_str(),
 		   config.address.c_str());
 
-/*
 	if (!config.address.empty()) {
 		connection.open(config.broker);
 		session = connection.newSession();
 		sender = session.createSender(config.address);
 	}
-*/
 
 //	closelog();
 //	openlog("job_publisher", LOG_PID, LOG_DAEMON);
@@ -142,8 +136,7 @@ int main(int argc, char *argv[])
 		if (config.dump) {
 			Dump();
 			consumer->Reset();
-			delete reader;
-			return 0;
+			break;
 		}
 
 		cout << "Dirty: ";
@@ -172,12 +165,10 @@ int main(int argc, char *argv[])
 
 	delete reader;
 
-/*
 	if (!config.address.empty()) {
 		session.sync();
 		connection.close();
 	}
-*/
 
 	return 0;
 }
@@ -219,7 +210,5 @@ void
 PublishJob(const string &key)
 {
 	cout << "Publish: " << key << endl;
-/*
-	sender.send(...);
- */
+//	sender.send(NULL);
 }
