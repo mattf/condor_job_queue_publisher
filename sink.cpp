@@ -77,10 +77,15 @@ main(int argc, char *argv[])
 		Message message = receiver.fetch();
 		MapView content(message);
 
-		if (message.getSubject() == "DONE") break;
+		string id = message.getSubject();
 
-		cout << message.getSubject() << " :: ";
-		cout << content << endl;
+		if ("DONE" == id) break;
+
+		for (MapView::const_iterator i = content.begin();
+			 content.end() != i;
+			 i++) {
+			cout << id << " " << (*i).first << " = " << (*i).second << endl;
+		}
 		session.acknowledge();
 	}
 
