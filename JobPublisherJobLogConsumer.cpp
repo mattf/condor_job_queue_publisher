@@ -62,15 +62,11 @@ JobPublisherJobLogConsumer::NewClassAd(const char *_key,
 
 		JobCollectionType::iterator element = g_jobs.find(cluster_key);
 
-		Job parent;
 		if (g_jobs.end() == element) {
-			parent = Job(cluster_key, NULL);
-			g_jobs[cluster_key] = parent;
-		} else {
-			parent = (*element).second;
+			g_jobs[cluster_key] = Job(cluster_key, NULL);
 		}
 
-		g_jobs[key] = Job(key, &parent);
+		g_jobs[key] = Job(key, &(g_jobs[cluster_key]));
 
 		g_dirty_jobs.insert(key);
 	}
