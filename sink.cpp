@@ -76,6 +76,7 @@ main(int argc, char *argv[])
 	while (1) {
 		Message message = receiver.fetch();
 		MapView content(message);
+		cout << message.getSubject() << " :: ";
 		cout << content << endl;
 		session.acknowledge();
 	}

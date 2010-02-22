@@ -220,6 +220,8 @@ PublishJob(const string &key)
 		JobCollectionType::const_iterator job = g_jobs.find(key);
 		assert(g_jobs.end() != job);
 
+		message.setSubject(key);
+
 		for (Job::AttributeMapType::const_iterator attr =
 				 (*job).second.GetAttributes().begin();
 			 (*job).second.GetAttributes().end() != attr;
