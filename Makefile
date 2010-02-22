@@ -18,10 +18,14 @@ TEST_JOB_LIBS=
 MEMORY_PERFORMANCE=memory_performance
 MEMORY_PERFORMANCE_OBJS=memory_performance.o
 
+SINK=sink
+SINK_OBJS=sink.o
+SINK_LIBS=-lqpidcommon -lqpidclient
+
 %-pic.o: %.cpp
 	gcc -fpic -c $< -o $@
 
-all: $(LIBRARY) $(JOB_PUBLISHER) $(TEST_DETECTTYPE) $(TEST_JOB) $(MEMORY_PERFORMANCE)
+all: $(LIBRARY) $(JOB_PUBLISHER) $(TEST_DETECTTYPE) $(TEST_JOB) $(MEMORY_PERFORMANCE) $(SINK)
 
 clean:
 	rm -f $(LIBRARY) $(LIBRARY_OBJS)
@@ -44,3 +48,7 @@ $(TEST_JOB): $(TEST_JOB_OBJS)
 
 $(MEMORY_PERFORMANCE): $(MEMORY_PERFORMANCE_OBJS)
 	g++ $(LDFLAGS) -g -o $@ $^
+
+$(SINK): $(SINK_OBJS)
+	g++ $(LDFLAGS) -g -o $@ $^ $(SINK_LIBS)
+
