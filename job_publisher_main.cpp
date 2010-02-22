@@ -135,26 +135,26 @@ int main(int argc, char *argv[])
 	while (1) {
 		reader->Poll();
 
-		cout << "Dirty: ";
+//		cout << "Dirty: ";
 		for (JobSetType::const_iterator i = g_dirty_jobs.begin();
 			 g_dirty_jobs.end() != i;
 			 i++) {
-			std::cout << (*i) << " ";
+//			std::cout << (*i) << " ";
 			PublishJob((*i));
 			g_dirty_jobs.erase(i);
 		}
-		cout << endl;
+//		cout << endl;
 
-		cout << "Delete: ";
+//		cout << "Delete: ";
 		for (JobSetType::const_iterator i = g_delete_jobs.begin();
 			 g_delete_jobs.end() != i;
 			 i++) {
-			std::cout << (*i) << " ";
+//			std::cout << (*i) << " ";
 			PublishJob((*i));
 			g_jobs.erase((*i));
 			g_delete_jobs.erase(i);
 		}
-		cout << endl;
+//		cout << endl;
 
 		if (config.dump) {
 			Dump();
@@ -216,8 +216,6 @@ Dump()
 void
 PublishJob(const string &key)
 {
-	cout << "Publish: " << key << endl;
-
 	if (!config.address.empty()) {
 		Message message;
 		MapContent content(message);
