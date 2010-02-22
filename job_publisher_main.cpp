@@ -31,6 +31,8 @@ void PublishJob(const string &key);
 
 Sender sender;
 
+Config config;
+
 void
 usage(char *argv[])
 {
@@ -105,7 +107,6 @@ int main(int argc, char *argv[])
 	Connection connection;
 	Session session;
 
-	Config config;
 	config.broker = "amqp:tcp:127.0.0.1:5672";
 
 	openlog("job_publisher", LOG_PID|LOG_PERROR, LOG_DAEMON);
@@ -212,19 +213,21 @@ PublishJob(const string &key)
 {
 	cout << "Publish: " << key << endl;
 
-	Message message;
-	MapContent content(message);
+	if (!config.address.empty()) {
+		Message message;
+		MapContent content(message);
 
-	JobCollectionType::const_iterator job = g_jobs.find(key);
-	assert(g_jobs.end() != job);
+		JobCollectionType::const_iterator job = g_jobs.find(key);
+		assert(g_jobs.end() != job);
 
-	for (Job::AttributeMapType::const_iterator attr =
-			 (*job).second.GetAttributes().begin();
-		 (*job).second.GetAttributes().end() != attr;
-		 attr++) {
-		content[(*attr).first] = (*attr).second;
+		for (Job::AttributeMapType::const_iterator attr =
+				 (*job).second.GetAttributes().begin();
+			 (*job).second.GetAttributes().end() != attr;
+			 attr++) {
+			content[(*attr).first] = (*attr).second;
+		}
+
+		content.encode();
+		sender.send(message);
 	}
-
-	content.encode();
-	sender.send(message);
 }
