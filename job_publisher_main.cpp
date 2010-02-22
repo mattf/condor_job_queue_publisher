@@ -158,6 +158,11 @@ int main(int argc, char *argv[])
 
 		if (config.dump) {
 			Dump();
+			if (!config.address.empty()) {
+				Message message;
+				message.setSubject("DONE");
+				sender.send(message);
+			}
 			consumer->Reset();
 			break;
 		}
