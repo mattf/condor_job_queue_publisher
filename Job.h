@@ -48,7 +48,7 @@ public:
 
 	const string GetKey() const;
 
-	bool Get(const string name, fstring &attribute) const;
+	bool Get(const string name, string &attribute) const;
 	void Set(const string name, const string value);
 	void Delete(const string name);
 

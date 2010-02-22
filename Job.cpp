@@ -53,7 +53,7 @@ Job::GetKey() const
 }
 
 bool
-Job::Get(const string _name, fstring &attribute) const
+Job::Get(const string _name, string &attribute) const
 {
 		// Lookup locally, fall back on parent
 
