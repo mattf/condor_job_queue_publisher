@@ -33,6 +33,7 @@ clean:
 	rm -f $(TEST_DETECTTYPE) $(TEST_DETECTTYPE_OBJS)
 	rm -f $(TEST_JOB) $(TEST_JOB_OBJS)
 	rm -f $(MEMORY_PERFORMANCE) $(MEMORY_PERFORMANCE_OBJS)
+	rm -f $(SINK) $(SINK_OBJS)
 
 $(LIBRARY): $(LIBRARY_OBJS)
 	gcc -g -shared -Wl,-soname,$@ -o $@ $^
