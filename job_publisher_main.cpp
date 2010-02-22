@@ -58,7 +58,7 @@ parse_args(int argc, char *argv[], Config &config)
 
 	int c;
 	while (1) {
-		c = getopt_long(argc, argv, ":f:b:p:a:d", options, NULL);
+		c = getopt_long(argc, argv, ":f:b:a:d", options, NULL);
 		if (-1 == c) break;
 
 		switch (c) {
