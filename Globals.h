@@ -21,11 +21,17 @@
 
 #include <map>
 #include <string>
+#include <set>
 
 #include "Job.h"
 
 typedef std::map<std::string, Job> JobCollectionType;
 
 extern JobCollectionType g_jobs;
+
+typedef std::set<std::string> JobSetType;
+
+extern JobSetType g_dirty_jobs;
+extern JobSetType g_delete_jobs;
 
 #endif /* _GLOBALS_H */

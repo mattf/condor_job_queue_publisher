@@ -19,3 +19,6 @@
 #include "Globals.h"
 
 JobCollectionType g_jobs;
+
+JobSetType g_dirty_jobs;
+JobSetType g_delete_jobs;

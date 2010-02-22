@@ -71,6 +71,8 @@ JobPublisherJobLogConsumer::NewClassAd(const char *_key,
 		}
 
 		g_jobs[key] = Job(key, &parent);
+
+		g_dirty_jobs.insert(key);
 	}
 
 	return true;
@@ -79,7 +81,9 @@ JobPublisherJobLogConsumer::NewClassAd(const char *_key,
 bool
 JobPublisherJobLogConsumer::DestroyClassAd(const char *_key)
 {
-	g_jobs.erase(_key);
+	string key = _key;
+	g_delete_jobs.insert(key);
+//	g_jobs.erase(key);
 
 	return true;
 }
@@ -101,6 +105,10 @@ JobPublisherJobLogConsumer::SetAttribute(const char *_key,
 
 	(*element).second.Set(name, value);
 
+	if ('0' != key[0]) {
+		g_dirty_jobs.insert(key);
+	}
+
 	return true;
 }
 
@@ -108,7 +116,9 @@ bool
 JobPublisherJobLogConsumer::DeleteAttribute(const char *_key,
 										 const char *_name)
 {
-	JobCollectionType::iterator element = g_jobs.find(_key);
+	string key = _key;
+
+	JobCollectionType::iterator element = g_jobs.find(key);
 
 	if (g_jobs.end() == element) {
 		printf("error reading %s: no such job '%s' for 'delete %s'\n",
@@ -117,6 +127,10 @@ JobPublisherJobLogConsumer::DeleteAttribute(const char *_key,
 	}
 
 	(*element).second.Delete(_name);
+
+	if ('0' != key[0]) {
+		g_dirty_jobs.insert(key);
+	}
 
 	return true;
 }

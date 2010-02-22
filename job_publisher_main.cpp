@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <map>
 #include <string>
 #include <string.h>
@@ -121,6 +123,22 @@ int main(int argc, char *argv[])
 			delete reader;
 			return 0;
 		}
+
+		cout << "Dirty: ";
+		for (JobSetType::iterator i = g_dirty_jobs.begin();
+			 g_dirty_jobs.end() != i;
+			 i++) {
+			std::cout << (*i) << " ";
+		}
+		cout << endl;
+
+		cout << "Delete: ";
+		for (JobSetType::iterator i = g_delete_jobs.begin();
+			 g_delete_jobs.end() != i;
+			 i++) {
+			std::cout << (*i) << " ";
+		}
+		cout << endl;
 
 		sleep(5);
 	}
