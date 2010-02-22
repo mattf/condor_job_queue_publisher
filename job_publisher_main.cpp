@@ -31,6 +31,7 @@ usage(char *argv[])
 		   "--file <job_queue.log> "
 		   "[--host <broker host>] "
 		   "[--port <broker port>]\n",
+		   "[--address <queue or topic>]\n",
 		   argv[0]);
 	exit(1);
 }
@@ -39,19 +40,23 @@ void
 parse_args(int argc, char *argv[], Config &config)
 {
 	static struct option options[] = {
+		{"file", 1, NULL, 'f'},
 		{"host", 1, NULL, 'h'},
 		{"port", 1, NULL, 'p'},
-		{"file", 1, NULL, 'f'},
+		{"address", 1, NULL, 'a'},
 		{"dump", 0, NULL, 'd'},
 		{NULL, NULL, NULL, NULL}
 	};
 
 	int c;
 	while (1) {
-		c = getopt_long(argc, argv, ":h:p:f:d", options, NULL);
+		c = getopt_long(argc, argv, ":f:h:p:a:d", options, NULL);
 		if (-1 == c) break;
 
 		switch (c) {
+		case 'f':
+			config.file = optarg;
+			break;
 		case 'h':
 			config.host = optarg;
 			break;
@@ -62,8 +67,8 @@ parse_args(int argc, char *argv[], Config &config)
 				usage(argv);
 			}
 			break;
-		case 'f':
-			config.file = optarg;
+		case 'a':
+			config.address = optarg;
 			break;
 		case 'd':
 			config.dump = true;
@@ -106,8 +111,11 @@ int main(int argc, char *argv[])
 
 	parse_args(argc, argv, config);
 
-	syslog(LOG_INFO, "config -- host = %s; port: %d; file: %s\n",
-		   config.host.c_str(), config.port, config.file.c_str());
+	syslog(LOG_INFO, "config -- file = %s; host = %s; port: %d; address: %s\n",
+		   config.file.c_str(),
+		   config.host.c_str(),
+		   config.port,
+		   config.address.c_str());
 
 //	closelog();
 //	openlog("job_publisher", LOG_PID, LOG_DAEMON);
