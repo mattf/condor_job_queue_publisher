@@ -28,8 +28,6 @@ void Dump();
 
 void PublishJob(const string &key);
 
-bool dump = false;
-
 /*
 Sender sender;
 */
@@ -141,7 +139,7 @@ int main(int argc, char *argv[])
 	while (1) {
 		reader->Poll();
 
-		if (dump) {
+		if (config.dump) {
 			Dump();
 			consumer->Reset();
 			delete reader;
