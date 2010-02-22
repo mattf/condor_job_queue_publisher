@@ -5,14 +5,14 @@ LIBRARY=libclassadlogreader.so.1.0.0
 LIBRARY_OBJS=JobLogReader-pic.o classadlogentry-pic.o prober-pic.o classadlogparser-pic.o
 
 JOB_PUBLISHER=job_publisher
-JOB_PUBLISHER_OBJS=job_publisher_main.o JobPublisherJobLogConsumer.o Utils.o Job.o Globals.o
+JOB_PUBLISHER_OBJS=job_publisher_main.o JobPublisherJobLogConsumer.o Job.o Globals.o
 JOB_PUBLISHER_LIBS=$(LIBRARY) -lqpidcommon -lqpidclient
 
 TEST_DETECTTYPE=test_DetectType
 TEST_DETECTTYPE_OBJS=test_DetectType.o Utils.o
 
 TEST_JOB=test_Job
-TEST_JOB_OBJS=test_Job.o Utils.o Job.o
+TEST_JOB_OBJS=test_Job.o Job.o
 TEST_JOB_LIBS=
 
 MEMORY_PERFORMANCE=memory_performance

@@ -23,8 +23,6 @@
 #include <map>
 #include <set>
 
-#include "AttributeValueType.h"
-
 #include <boost/flyweight.hpp>
 
 using std::string;
