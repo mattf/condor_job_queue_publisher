@@ -1,8 +1,7 @@
 struct Config
 {
 	string file;
-	string host;
-	int port;
+	string broker;
 	string address;
 	bool dump;
 };

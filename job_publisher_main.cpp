@@ -29,8 +29,7 @@ usage(char *argv[])
 	syslog(LOG_ERR,
 		   "usage: %s "
 		   "--file <job_queue.log> "
-		   "[--host <broker host>] "
-		   "[--port <broker port>]\n",
+		   "[--broker <broker url>] "
 		   "[--address <queue or topic>]\n",
 		   argv[0]);
 	exit(1);
@@ -41,8 +40,7 @@ parse_args(int argc, char *argv[], Config &config)
 {
 	static struct option options[] = {
 		{"file", 1, NULL, 'f'},
-		{"host", 1, NULL, 'h'},
-		{"port", 1, NULL, 'p'},
+		{"broker", 1, NULL, 'b'},
 		{"address", 1, NULL, 'a'},
 		{"dump", 0, NULL, 'd'},
 		{NULL, NULL, NULL, NULL}
@@ -50,22 +48,15 @@ parse_args(int argc, char *argv[], Config &config)
 
 	int c;
 	while (1) {
-		c = getopt_long(argc, argv, ":f:h:p:a:d", options, NULL);
+		c = getopt_long(argc, argv, ":f:b:p:a:d", options, NULL);
 		if (-1 == c) break;
 
 		switch (c) {
 		case 'f':
 			config.file = optarg;
 			break;
-		case 'h':
-			config.host = optarg;
-			break;
-		case 'p':
-			config.port = (int) strtol(optarg, NULL, 10);
-			if (0 == config.port) {
-				syslog(LOG_ERR, "invalid port: %s\n", optarg);
-				usage(argv);
-			}
+		case 'b':
+			config.broker = optarg;
 			break;
 		case 'a':
 			config.address = optarg;
@@ -104,17 +95,15 @@ parse_args(int argc, char *argv[], Config &config)
 int main(int argc, char *argv[])
 {
 	Config config;
-	config.host = "localhost";
-	config.port = 5672;
+	config.broker = "amqp:tcp:127.0.0.1:5672";
 
 	openlog("job_publisher", LOG_PID|LOG_PERROR, LOG_DAEMON);
 
 	parse_args(argc, argv, config);
 
-	syslog(LOG_INFO, "config -- file = %s; host = %s; port: %d; address: %s\n",
+	syslog(LOG_INFO, "config -- file = %s; broker = %s; address: %s\n",
 		   config.file.c_str(),
-		   config.host.c_str(),
-		   config.port,
+		   config.broker.c_str(),
 		   config.address.c_str());
 
 //	closelog();
