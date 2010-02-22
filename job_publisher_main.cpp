@@ -133,12 +133,6 @@ int main(int argc, char *argv[])
 	while (1) {
 		reader->Poll();
 
-		if (config.dump) {
-			Dump();
-			consumer->Reset();
-			break;
-		}
-
 		cout << "Dirty: ";
 		for (JobSetType::const_iterator i = g_dirty_jobs.begin();
 			 g_dirty_jobs.end() != i;
@@ -159,6 +153,12 @@ int main(int argc, char *argv[])
 			g_delete_jobs.erase(i);
 		}
 		cout << endl;
+
+		if (config.dump) {
+			Dump();
+			consumer->Reset();
+			break;
+		}
 
 		sleep(5);
 	}
