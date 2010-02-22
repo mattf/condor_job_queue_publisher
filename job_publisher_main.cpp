@@ -209,6 +209,25 @@ Dump()
 			line += (*j).second;
 			syslog(LOG_DEBUG, "-> %s", line.c_str());
 		}
+
+		Job::AttributeMapType attrs;
+		attrs = (*i).second.GetParentAttributes();
+		for (Job::AttributeMapType::const_iterator attr =
+				 (*i).second.GetAttributes().begin();
+			 (*i).second.GetAttributes().end() != attr;
+			 attr++) {
+			attrs[(*attr).first] = (*attr).second;
+		}
+		for (Job::AttributeMapType::const_iterator j = attrs.begin();
+			 attrs.end() != j;
+			 j++) {
+			line = (*i).first;
+			line += " ";
+			line += (*j).first;
+			line += " ";
+			line += (*j).second;
+			syslog(LOG_DEBUG, "=> %s", line.c_str());
+		}
 	}
 	syslog(LOG_DEBUG, "***END DUMP***");
 }
