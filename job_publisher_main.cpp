@@ -219,4 +219,7 @@ void
 PublishJob(const string &key)
 {
 	cout << "Publish: " << key << endl;
+/*
+	sender.send(...);
+ */
 }
