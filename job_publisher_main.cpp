@@ -19,6 +19,8 @@
 
 void Dump();
 
+void PublishJob(const string &key);
+
 bool dump = false;
 
 void
@@ -126,18 +128,23 @@ int main(int argc, char *argv[])
 		}
 
 		cout << "Dirty: ";
-		for (JobSetType::iterator i = g_dirty_jobs.begin();
+		for (JobSetType::const_iterator i = g_dirty_jobs.begin();
 			 g_dirty_jobs.end() != i;
 			 i++) {
 			std::cout << (*i) << " ";
+			PublishJob((*i));
+			g_dirty_jobs.erase(i);
 		}
 		cout << endl;
 
 		cout << "Delete: ";
-		for (JobSetType::iterator i = g_delete_jobs.begin();
+		for (JobSetType::const_iterator i = g_delete_jobs.begin();
 			 g_delete_jobs.end() != i;
 			 i++) {
 			std::cout << (*i) << " ";
+			PublishJob((*i));
+			g_jobs.erase((*i));
+			g_delete_jobs.erase(i);
 		}
 		cout << endl;
 
@@ -180,4 +187,10 @@ Dump()
 		}
 	}
 	syslog(LOG_DEBUG, "***END DUMP***");
+}
+
+void
+PublishJob(const string &key)
+{
+	cout << "Publish: " << key << endl;
 }
