@@ -87,7 +87,7 @@ main(int argc, char *argv[])
 		for (MapView::const_iterator i = content.begin();
 			 content.end() != i;
 			 i++) {
-			cout << id << " " << (*i).first << " = " << (*i).second << endl;
+			cout << id << " " << (*i).first << " " << (*i).second << endl;
 		}
 		session.acknowledge();
 	}
