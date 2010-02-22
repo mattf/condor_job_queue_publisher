@@ -79,7 +79,10 @@ main(int argc, char *argv[])
 
 		string id = message.getSubject();
 
-		if ("DONE" == id) break;
+		if ("DONE" == id) {
+			session.acknowledge();
+			break;
+		}
 
 		for (MapView::const_iterator i = content.begin();
 			 content.end() != i;
