@@ -15,6 +15,8 @@
 
 #include "Globals.h"
 
+#include "Config.h"
+
 void Dump();
 
 bool dump = false;
@@ -32,8 +34,7 @@ usage(char *argv[])
 }
 
 void
-parse_args(int argc, char *argv[],
-		   const char *&host, int &port, const char *&file)
+parse_args(int argc, char *argv[], Config &config)
 {
 	static struct option options[] = {
 		{"host", 1, NULL, 'h'},
@@ -50,20 +51,20 @@ parse_args(int argc, char *argv[],
 
 		switch (c) {
 		case 'h':
-			host = optarg;
+			config.host = optarg;
 			break;
 		case 'p':
-			port = (int) strtol(optarg, NULL, 10);
-			if (0 == port) {
+			config.port = (int) strtol(optarg, NULL, 10);
+			if (0 == config.port) {
 				syslog(LOG_ERR, "invalid port: %s\n", optarg);
 				usage(argv);
 			}
 			break;
 		case 'f':
-			file = optarg;
+			config.file = optarg;
 			break;
 		case 'd':
-			dump = true;
+			config.dump = true;
 			break;
 		case ':':
 			syslog(LOG_ERR, "%s requires an argument\n", argv[optind - 1]);
@@ -79,7 +80,7 @@ parse_args(int argc, char *argv[],
 		}
 	}
 
-	if (!file) {
+	if (config.file.empty()) {
 		syslog(LOG_ERR, "--file required\n");
 		usage(argv);
 	}
@@ -95,16 +96,16 @@ parse_args(int argc, char *argv[],
 
 int main(int argc, char *argv[])
 {
-	const char *file = NULL;
-	const char *host = "localhost";
-	int port = 5672;
+	Config config;
+	config.host = "localhost";
+	config.port = 5672;
 
 	openlog("job_publisher", LOG_PID|LOG_PERROR, LOG_DAEMON);
 
-	parse_args(argc, argv, host, port, file);
+	parse_args(argc, argv, config);
 
 	syslog(LOG_INFO, "config -- host = %s; port: %d; file: %s\n",
-		   host, port, file);
+		   config.host.c_str(), config.port, config.file.c_str());
 
 //	closelog();
 //	openlog("job_publisher", LOG_PID, LOG_DAEMON);
@@ -112,7 +113,7 @@ int main(int argc, char *argv[])
 	JobPublisherJobLogConsumer *consumer = new JobPublisherJobLogConsumer();
 	JobLogReader *reader = new JobLogReader(consumer);
 
-	reader->SetJobLogFileName(file);
+	reader->SetJobLogFileName(config.file.c_str());
 
 	while (1) {
 		reader->Poll();
