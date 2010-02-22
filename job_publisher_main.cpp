@@ -223,6 +223,13 @@ PublishJob(const string &key)
 		message.setSubject(key);
 
 		for (Job::AttributeMapType::const_iterator attr =
+				 (*job).second.GetParentAttributes().begin();
+			 (*job).second.GetParentAttributes().end() != attr;
+			 attr++) {
+			content[(*attr).first] = (*attr).second;
+		}
+
+		for (Job::AttributeMapType::const_iterator attr =
 				 (*job).second.GetAttributes().begin();
 			 (*job).second.GetAttributes().end() != attr;
 			 attr++) {
