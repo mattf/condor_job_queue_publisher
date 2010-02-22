@@ -11,6 +11,7 @@
 #include <syslog.h>
 
 #include <qpid/messaging/Connection.h>
+#include <qpid/messaging/MapContent.h>
 #include <qpid/messaging/Message.h>
 #include <qpid/messaging/Sender.h>
 #include <qpid/messaging/Session.h>
@@ -210,5 +211,20 @@ void
 PublishJob(const string &key)
 {
 	cout << "Publish: " << key << endl;
-//	sender.send(NULL);
+
+	Message message;
+	MapContent content(message);
+
+	JobCollectionType::const_iterator job = g_jobs.find(key);
+	assert(g_jobs.end() != job);
+
+	for (Job::AttributeMapType::const_iterator attr =
+			 (*job).second.GetAttributes().begin();
+		 (*job).second.GetAttributes().end() != attr;
+		 attr++) {
+		content[(*attr).first] = (*attr).second;
+	}
+
+	content.encode();
+	sender.send(message);
 }
