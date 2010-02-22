@@ -20,45 +20,6 @@
 
 #include "Utils.h"
 
-Attribute::Attribute(AttributeValueType _type, const string _value):
-	m_type(_type),
-	m_value(_value)
-{ }
-
-Attribute::Attribute()
-{
-}
-
-Attribute::Attribute(const Attribute &_attribute)
-{
-	*this = _attribute;
-}
-
-Attribute &Attribute::operator=(const Attribute &_attribute)
-{
-	m_type = _attribute.m_type;
-	m_value = _attribute.m_value;
-
-	return *this;
-}
-
-Attribute::~Attribute()
-{
-}
-
-AttributeValueType
-Attribute::GetType() const
-{
-	return m_type;
-}
-
-const string
-Attribute:: GetValue() const
-{
-	return m_value;
-}
-
-
 Job::Job(const string _key,
 		 const Job *_parent):
 	m_key(_key),
@@ -94,7 +55,7 @@ Job::GetKey() const
 }
 
 bool
-Job::Get(const string _name, Attribute &attribute) const
+Job::Get(const string _name, flyweight<string> &attribute) const
 {
 		// Lookup locally, fall back on parent
 
@@ -117,12 +78,7 @@ Job::Get(const string _name, Attribute &attribute) const
 void
 Job::Set(const string _name, const string _value)
 {
-	AttributeValueType type = DetectType(_value.c_str());
-	if (UNKNOWN_TYPE == type) {
-			// XXX: Error?
-	}
-
-	m_attributes[flyweight<string>(_name)] = Attribute(type, _value);
+	m_attributes[flyweight<string>(_name)] = flyweight<string>(_value);
 }
 
 void

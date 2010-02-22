@@ -199,7 +199,7 @@ Dump()
 			line += " ";
 			line += (*j).first;
 			line += " ";
-			line += (*j).second.GetValue();
+			line += (*j).second;
 			syslog(LOG_DEBUG, "-> %s", line.c_str());
 		}
 	}

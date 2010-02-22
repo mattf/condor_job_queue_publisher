@@ -34,29 +34,11 @@ using std::set;
 using namespace ::boost;
 using namespace ::boost::flyweights;
 
-class Attribute
-{
-public:
-	Attribute(AttributeValueType _type, const string _value);
-	Attribute(const Attribute &_attribute);
-	Attribute();
-	Attribute & operator=(const Attribute &_attribute);
-	~Attribute();
-
-	AttributeValueType GetType() const;
-	const string GetValue() const;
-
-private:
-	AttributeValueType m_type;
-	flyweight<string> m_value;
-//	string m_value;
-};
-
 class Job
 {
 public:
 //	typedef map<const string, Attribute> AttributeMapType;
-	typedef map<flyweight<string>, Attribute> AttributeMapType;
+	typedef map<flyweight<string>, flyweight<string> > AttributeMapType;
 
 	Job(const string _key,
 		const Job *_parent);
@@ -67,7 +49,7 @@ public:
 
 	const string GetKey() const;
 
-	bool Get(const string name, Attribute &attribute) const;
+	bool Get(const string name, flyweight<string> &attribute) const;
 	void Set(const string name, const string value);
 	void Delete(const string name);
 
