@@ -21,5 +21,6 @@ struct Config
 	string file;
 	string broker;
 	string address;
+	int interval;
 	bool dump;
 };

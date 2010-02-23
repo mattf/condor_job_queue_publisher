@@ -56,7 +56,8 @@ usage(char *argv[])
 		   "usage: %s "
 		   "--file <job_queue.log> "
 		   "[--broker <broker url>] "
-		   "[--address <queue or topic>]\n",
+		   "[--address <queue or topic>] "
+		   "[--interval <poll interval>]\n",
 		   argv[0]);
 	exit(1);
 }
@@ -68,13 +69,14 @@ parse_args(int argc, char *argv[], Config &config)
 		{"file", 1, NULL, 'f'},
 		{"broker", 1, NULL, 'b'},
 		{"address", 1, NULL, 'a'},
+		{"interval", 1, NULL, 'i'},
 		{"dump", 0, NULL, 'd'},
 		{NULL, NULL, NULL, NULL}
 	};
 
 	int c;
 	while (1) {
-		c = getopt_long(argc, argv, ":f:b:a:d", options, NULL);
+		c = getopt_long(argc, argv, ":f:b:a:i:d", options, NULL);
 		if (-1 == c) break;
 
 		switch (c) {
@@ -86,6 +88,13 @@ parse_args(int argc, char *argv[], Config &config)
 			break;
 		case 'a':
 			config.address = optarg;
+			break;
+		case 'i':
+			config.interval = (int) strtol(optarg, NULL, 10);
+			if (0 > config.interval) {
+				syslog(LOG_ERR, "invalid interval, must be >=0: %s", optarg);
+				usage(argv);
+			}
 			break;
 		case 'd':
 			config.dump = true;
@@ -125,6 +134,7 @@ int main(int argc, char *argv[])
 	Session session;
 
 	config.broker = "amqp:tcp:127.0.0.1:5672";
+	config.interval = 15;
 
 	openlog("job_publisher", LOG_PID|LOG_PERROR, LOG_DAEMON);
 
@@ -176,7 +186,7 @@ int main(int argc, char *argv[])
 			break;
 		}
 
-		sleep(5);
+		sleep(config.interval);
 	}
 
 	delete reader;
