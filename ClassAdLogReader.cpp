@@ -56,7 +56,7 @@ ClassAdLogReader::GetClassAdLogFileName()
 }
 
 
-void
+PollResultType
 ClassAdLogReader::Poll() {
 	ProbeResultType probe_st;
 	FileOpErrCode fst;
@@ -66,7 +66,7 @@ ClassAdLogReader::Poll() {
 		syslog(LOG_ERR,
 			   "Failed to open %s: errno=%d (%m)",
 			   parser.getJobQueueName(), errno);
-		return;
+		return POLL_FAIL;
 	}
 
 	probe_st = prober.probe(parser.getLastCALogEntry(),parser.getFileDescriptor());
@@ -84,7 +84,7 @@ ClassAdLogReader::Poll() {
 	case NO_CHANGE:
 		break;
 	case PROBE_FATAL_ERROR:
-		exit(1);
+		return POLL_ERROR;
 	}
 
 	parser.closeFile();
@@ -93,6 +93,8 @@ ClassAdLogReader::Poll() {
 		// update prober to most recent observations about the job log file
 		prober.incrementProbeInfo();
 	}
+
+	return POLL_SUCCESS;
 }
 
 

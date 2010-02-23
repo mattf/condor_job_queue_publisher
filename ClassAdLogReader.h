@@ -27,11 +27,17 @@
 
 class ClassAdLogConsumer;
 
+enum PollResultType {
+	POLL_SUCCESS,
+	POLL_FAIL,
+	POLL_ERROR
+};
+
 class ClassAdLogReader {
 public:
 	ClassAdLogReader(ClassAdLogConsumer *consumer);
 	~ClassAdLogReader();
-	void Poll();
+	PollResultType Poll();
 	void SetClassAdLogFileName(char const *fname);
 	char const *GetClassAdLogFileName();
 private:

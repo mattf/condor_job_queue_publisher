@@ -184,7 +184,14 @@ int main(int argc, char *argv[])
 	reader->SetClassAdLogFileName(config.file.c_str());
 
 	while (1) {
-		reader->Poll();
+		switch (reader->Poll()) {
+		case POLL_FAIL:
+			syslog(LOG_ERR, "Polling failed, ignoring, will try again");
+			break;
+		case POLL_ERROR:
+			syslog(LOG_ERR, "Polling error, exiting");
+			exit(1);
+		}
 
 		for (JobSetType::const_iterator i = g_dirty_jobs.begin();
 			 g_dirty_jobs.end() != i;
