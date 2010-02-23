@@ -123,9 +123,6 @@ int main(int argc, char *argv[])
 		sender = session.createSender(config.address);
 	}
 
-//	closelog();
-//	openlog("job_publisher", LOG_PID, LOG_DAEMON);
-
 	JobPublisherJobLogConsumer *consumer = new JobPublisherJobLogConsumer();
 	JobLogReader *reader = new JobLogReader(consumer);
 
@@ -134,26 +131,20 @@ int main(int argc, char *argv[])
 	while (1) {
 		reader->Poll();
 
-//		cout << "Dirty: ";
 		for (JobSetType::const_iterator i = g_dirty_jobs.begin();
 			 g_dirty_jobs.end() != i;
 			 i++) {
-//			std::cout << (*i) << " ";
 			PublishJob((*i), sender);
 			g_dirty_jobs.erase(i);
 		}
-//		cout << endl;
 
-//		cout << "Delete: ";
 		for (JobSetType::const_iterator i = g_delete_jobs.begin();
 			 g_delete_jobs.end() != i;
 			 i++) {
-//			std::cout << (*i) << " ";
 			PublishJob((*i), sender);
 			g_jobs.erase((*i));
 			g_delete_jobs.erase(i);
 		}
-//		cout << endl;
 
 		if (config.dump) {
 			Dump();
