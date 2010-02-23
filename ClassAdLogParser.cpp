@@ -24,7 +24,7 @@
 #include <errno.h>
 
 #include "ClassAdLogEntry.h"
-#include "classadlogparser.h"
+#include "ClassAdLogParser.h"
 
 /***** Prevent calling free multiple times in this code *****/
 /* This fixes bugs where we would segfault when reading in

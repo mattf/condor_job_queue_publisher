@@ -21,7 +21,7 @@
 #include <string.h>
 
 #include "ClassAdLogEntry.h"
-#include "classadlogparser.h"
+#include "ClassAdLogParser.h"
 
 ClassAdLogEntry::ClassAdLogEntry()
 {

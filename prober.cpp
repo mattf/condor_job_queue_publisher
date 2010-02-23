@@ -27,7 +27,7 @@
 
 #include "ClassAdLogEntry.h"
 #include "prober.h"
-#include "classadlogparser.h"
+#include "ClassAdLogParser.h"
 
 //! constructor
 Prober::Prober()

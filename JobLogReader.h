@@ -21,7 +21,7 @@
 #define _JOBLOGREADER_H_
 
 #include "ClassAdLogEntry.h"
-#include "classadlogparser.h"
+#include "ClassAdLogParser.h"
 #include "prober.h"
 
 
