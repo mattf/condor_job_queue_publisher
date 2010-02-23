@@ -17,21 +17,20 @@
  *
  ***************************************************************/
 
-#ifndef _JOBLOGREADER_H_
-#define _JOBLOGREADER_H_
+#ifndef _CLASSADLOGREADER_H_
+#define _CLASSADLOGREADER_H_
 
 #include "ClassAdLogEntry.h"
 #include "ClassAdLogParser.h"
 #include "ClassAdLogProber.h"
-
-
-class ClassAdLogConsumer;
 
 enum PollResultType {
 	POLL_SUCCESS,
 	POLL_FAIL,
 	POLL_ERROR
 };
+
+class ClassAdLogConsumer;
 
 class ClassAdLogReader {
 public:
