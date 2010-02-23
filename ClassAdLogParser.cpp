@@ -210,7 +210,7 @@ ClassAdLogParser::readLogEntry(int &op_type)
 			// check if this bogus record is in the midst of a transaction
 			// (try to find a CloseTransaction log record)
 		
-		char	*line;
+		char	*line; /// XXX: leaked?
 
 		int		op;
 
