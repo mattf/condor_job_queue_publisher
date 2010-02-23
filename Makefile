@@ -42,6 +42,12 @@ clean:
 	rm -f $(MEMORY_PERFORMANCE) $(MEMORY_PERFORMANCE_OBJS)
 	rm -f $(SINK) $(SINK_OBJS)
 
+test: $(TEST_JOB) $(JOB_PUBLISHER) $(SINK)
+	@echo "NOTE: You better have a broker running with a queue named jp-test-queue"
+	@echo " Try: service qpidd start && qpid-config add queue jp-test-queue"
+	./$(TEST_JOB)
+	sh ./test_job_publisher.sh --address=jp-test-queue
+
 $(JOB_PUBLISHER): $(JOB_PUBLISHER_OBJS)
 	g++ $(LDFLAGS) -o $@ $^ $(JOB_PUBLISHER_LIBS)
 
