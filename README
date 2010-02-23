@@ -27,9 +27,9 @@ log.
 
 Note:
  * If passing --daemon, --file must be a full path relative to /
+ * To avoid exit by SIGHUP run as "nohup job_publisher ..."
 
 Todo:
- * Handle HUP, TERM, QUIT signals
  * Work out best way to tag messages with SCHEDD_NAME and job id
 
 
