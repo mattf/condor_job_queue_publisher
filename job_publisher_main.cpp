@@ -185,19 +185,16 @@ Dump()
 	}
 	syslog(LOG_DEBUG, "%s", jobs.c_str());
 */
-	string line;
 	for (JobCollectionType::const_iterator i = g_jobs.begin();
 		 g_jobs.end() != i;
 		 i++) {
+		stringstream line;
 		for (Job::AttributeMapType::const_iterator j = (*i).second.GetAttributes().begin();
 			 (*i).second.GetAttributes().end() != j;
 			 j++) {
-			line = (*i).first;
-			line += " ";
-			line += (*j).first;
-			line += " ";
-			line += (*j).second;
-			syslog(LOG_DEBUG, "-> %s", line.c_str());
+			line.str("");
+			line << (*i).first << " " << (*j).first << " " << (*j).second;
+			syslog(LOG_DEBUG, "-> %s", line.str().c_str());
 		}
 
 		Job::AttributeMapType attrs;
@@ -211,12 +208,9 @@ Dump()
 		for (Job::AttributeMapType::const_iterator j = attrs.begin();
 			 attrs.end() != j;
 			 j++) {
-			line = (*i).first;
-			line += " ";
-			line += (*j).first;
-			line += " ";
-			line += (*j).second;
-			syslog(LOG_DEBUG, "=> %s", line.c_str());
+			line.str("");
+			line << (*i).first << " " << (*j).first << " " << (*j).second;
+			syslog(LOG_DEBUG, "=> %s", line.str().c_str());
 		}
 	}
 	syslog(LOG_DEBUG, "***END DUMP***");
