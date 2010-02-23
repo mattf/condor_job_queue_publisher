@@ -22,7 +22,7 @@
 
 #include "ClassAdLogEntry.h"
 #include "ClassAdLogParser.h"
-#include "prober.h"
+#include "Prober.h"
 
 
 class JobLogConsumer;

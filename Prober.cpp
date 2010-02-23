@@ -26,7 +26,7 @@
 #include <assert.h>
 
 #include "ClassAdLogEntry.h"
-#include "prober.h"
+#include "Prober.h"
 #include "ClassAdLogParser.h"
 
 //! constructor

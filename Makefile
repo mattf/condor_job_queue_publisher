@@ -2,7 +2,7 @@ CXXFLAGS=-g
 LDFLAGS=-pthread
 
 JOB_PUBLISHER=job_publisher
-JOB_PUBLISHER_OBJS=job_publisher_main.o JobPublisherJobLogConsumer.o Job.o Globals.o JobLogReader.o ClassAdLogEntry.o prober.o ClassAdLogParser.o
+JOB_PUBLISHER_OBJS=job_publisher_main.o JobPublisherJobLogConsumer.o Job.o Globals.o JobLogReader.o ClassAdLogEntry.o Prober.o ClassAdLogParser.o
 JOB_PUBLISHER_LIBS=-lqpidcommon -lqpidclient
 
 TEST_DETECTTYPE=test_DetectType
