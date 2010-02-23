@@ -126,7 +126,6 @@ ClassAdLogReader::IncrementalLoad()
 			}
 		}
 	}while(err == FILE_READ_SUCCESS);
-	if (FILE_FATAL_ERROR == err) { exit(1); }
 	if (err != FILE_READ_EOF) {
 		syslog(LOG_ERR,
 			   "error reading from %s: %d, errno=%d",
