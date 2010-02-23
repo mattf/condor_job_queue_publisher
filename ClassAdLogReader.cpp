@@ -83,6 +83,8 @@ ClassAdLogReader::Poll() {
 		break;
 	case NO_CHANGE:
 		break;
+	case PROBE_FATAL_ERROR:
+		exit(1);
 	}
 
 	parser.closeFile();

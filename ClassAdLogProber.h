@@ -23,6 +23,7 @@
 #include <time.h>
 
 enum ProbeResultType {  PROBE_ERROR, 
+						PROBE_FATAL_ERROR,
 						NO_CHANGE, 
 						INIT_QUILL, 
 						ADDITION, 

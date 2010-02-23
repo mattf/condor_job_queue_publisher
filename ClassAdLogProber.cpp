@@ -156,7 +156,9 @@ ClassAdLogProber::probe(ClassAdLogEntry *curCALogEntry,
 	caLogParser.setNextOffset(0);
 	st = caLogParser.readLogEntry(op_type);
 
-	if (FILE_FATAL_ERROR == st) { exit(1); }
+	if (FILE_FATAL_ERROR == st) {
+		return PROBE_FATAL_ERROR;
+	}
 	if (st != FILE_READ_SUCCESS) {
 		return PROBE_ERROR;
 	}
@@ -169,7 +171,7 @@ ClassAdLogProber::probe(ClassAdLogEntry *curCALogEntry,
 			   "type %d, but sees %d instead.",
 			   CondorLogOp_LogHistoricalSequenceNumber,
 			   caLogParser.getCurCALogEntry()->op_type);
-		exit(1);
+		return PROBE_FATAL_ERROR;
 	}
 
 	syslog(LOG_DEBUG,
@@ -194,7 +196,9 @@ ClassAdLogProber::probe(ClassAdLogEntry *curCALogEntry,
 	caLogParser.setNextOffset(curCALogEntry->offset);
 	st = caLogParser.readLogEntry(op_type);
 	
-	if (FILE_FATAL_ERROR == st) { exit(1); }
+	if (FILE_FATAL_ERROR == st) {
+		return PROBE_FATAL_ERROR;
+	}
 	if (st != FILE_READ_EOF && st != FILE_READ_SUCCESS) {
 		return PROBE_ERROR;
 	}
