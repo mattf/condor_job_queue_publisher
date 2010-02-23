@@ -20,7 +20,7 @@
 #ifndef _JOBLOGREADER_H_
 #define _JOBLOGREADER_H_
 
-#include "classadlogentry.h"
+#include "ClassAdLogEntry.h"
 #include "classadlogparser.h"
 #include "prober.h"
 

@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "classadlogentry.h"
+#include "ClassAdLogEntry.h"
 #include "prober.h"
 #include "classadlogparser.h"
 

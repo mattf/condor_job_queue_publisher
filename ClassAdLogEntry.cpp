@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "classadlogentry.h"
+#include "ClassAdLogEntry.h"
 #include "classadlogparser.h"
 
 ClassAdLogEntry::ClassAdLogEntry()

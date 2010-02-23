@@ -1,12 +1,9 @@
 CXXFLAGS=-g
 LDFLAGS=-pthread
 
-LIBRARY=libclassadlogreader.so.1.0.0
-LIBRARY_OBJS=JobLogReader-pic.o classadlogentry-pic.o prober-pic.o classadlogparser-pic.o
-
 JOB_PUBLISHER=job_publisher
-JOB_PUBLISHER_OBJS=job_publisher_main.o JobPublisherJobLogConsumer.o Job.o Globals.o
-JOB_PUBLISHER_LIBS=$(LIBRARY) -lqpidcommon -lqpidclient
+JOB_PUBLISHER_OBJS=job_publisher_main.o JobPublisherJobLogConsumer.o Job.o Globals.o JobLogReader.o ClassAdLogEntry.o prober.o classadlogparser.o
+JOB_PUBLISHER_LIBS=-lqpidcommon -lqpidclient
 
 TEST_DETECTTYPE=test_DetectType
 TEST_DETECTTYPE_OBJS=test_DetectType.o Utils.o
@@ -22,23 +19,16 @@ SINK=sink
 SINK_OBJS=sink.o
 SINK_LIBS=-lqpidcommon -lqpidclient
 
-%-pic.o: %.cpp
-	gcc -fpic -c $< -o $@
-
-all: $(LIBRARY) $(JOB_PUBLISHER) $(TEST_DETECTTYPE) $(TEST_JOB) $(MEMORY_PERFORMANCE) $(SINK)
+all: $(JOB_PUBLISHER) $(TEST_DETECTTYPE) $(TEST_JOB) $(MEMORY_PERFORMANCE) $(SINK)
 
 clean:
-	rm -f $(LIBRARY) $(LIBRARY_OBJS)
 	rm -f $(JOB_PUBLISHER) $(JOB_PUBLISHER_OBJS)
 	rm -f $(TEST_DETECTTYPE) $(TEST_DETECTTYPE_OBJS)
 	rm -f $(TEST_JOB) $(TEST_JOB_OBJS)
 	rm -f $(MEMORY_PERFORMANCE) $(MEMORY_PERFORMANCE_OBJS)
 	rm -f $(SINK) $(SINK_OBJS)
 
-$(LIBRARY): $(LIBRARY_OBJS)
-	gcc -g -shared -Wl,-soname,$@ -o $@ $^
-
-$(JOB_PUBLISHER): $(JOB_PUBLISHER_OBJS) $(LIBRARY)
+$(JOB_PUBLISHER): $(JOB_PUBLISHER_OBJS)
 	g++ $(LDFLAGS) -o $@ $^ $(JOB_PUBLISHER_LIBS)
 
 $(TEST_DETECTTYPE): $(TEST_DETECTTYPE_OBJS)

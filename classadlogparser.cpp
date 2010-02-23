@@ -23,7 +23,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "classadlogentry.h"
+#include "ClassAdLogEntry.h"
 #include "classadlogparser.h"
 
 /***** Prevent calling free multiple times in this code *****/
