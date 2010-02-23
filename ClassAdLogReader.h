@@ -22,7 +22,7 @@
 
 #include "ClassAdLogEntry.h"
 #include "ClassAdLogParser.h"
-#include "Prober.h"
+#include "ClassAdLogProber.h"
 
 
 class ClassAdLogConsumer;
@@ -36,7 +36,7 @@ public:
 	char const *GetClassAdLogFileName();
 private:
 	ClassAdLogConsumer *m_consumer;
-	Prober prober;
+	ClassAdLogProber prober;
 	ClassAdLogParser parser;
 
 	bool BulkLoad();
