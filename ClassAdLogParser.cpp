@@ -113,7 +113,7 @@ ClassAdLogParser::openFile() {
     log_fp = fopen(job_queue_name, "r");
 
     if (log_fp == NULL) {
-        printf("Warning: Unable to open the job_queue.log file!\n");
+        printf("Warning: Unable to open the %s file!\n", job_queue_name);
         return FILE_OPEN_ERROR;
     }
 	return FILE_OP_SUCCESS;
