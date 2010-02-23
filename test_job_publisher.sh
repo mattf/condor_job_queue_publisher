@@ -62,4 +62,24 @@ if [ ! -z "$ADDRESS" ]; then
    fi
 fi
 
+cat >> job_queue.log.gen-tiny << EOF
+107 28 CreationTimestamp 1266722428
+101 1.0 Job Machine
+103 1.0 Attr3 "Child"
+101 01.-1 Job Machine
+103 01.-1 Attr0 "Parent"
+103 01.-1 Attr1 "Parent"
+103 1.0 Attr1 "Child"
+EOF
+
+./job_publisher --file job_queue.log.gen-tiny --dump > job_publisher.out-tiny 2>&1
+grep "=> 1.0 Attr1 \"Child\"" job_publisher.out-tiny > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+   echo "SUCCESS: job_publisher properly overrides parent attributes"
+   rm -f job_publisher.out-tiny job_queue.log.gen-tiny
+else
+   echo "FAIL: job_publisher does not override parent attributes in children"
+   FAIL=1
+fi
+
 exit $FAIL
