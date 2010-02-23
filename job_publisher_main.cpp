@@ -27,9 +27,7 @@ using namespace qpid::messaging;
 
 void Dump();
 
-void PublishJob(const string &key);
-
-Sender sender;
+void PublishJob(const string &key, Sender &sender);
 
 Config config;
 
@@ -104,6 +102,7 @@ parse_args(int argc, char *argv[], Config &config)
 
 int main(int argc, char *argv[])
 {
+	Sender sender;
 	Connection connection;
 	Session session;
 
@@ -140,7 +139,7 @@ int main(int argc, char *argv[])
 			 g_dirty_jobs.end() != i;
 			 i++) {
 //			std::cout << (*i) << " ";
-			PublishJob((*i));
+			PublishJob((*i), sender);
 			g_dirty_jobs.erase(i);
 		}
 //		cout << endl;
@@ -150,7 +149,7 @@ int main(int argc, char *argv[])
 			 g_delete_jobs.end() != i;
 			 i++) {
 //			std::cout << (*i) << " ";
-			PublishJob((*i));
+			PublishJob((*i), sender);
 			g_jobs.erase((*i));
 			g_delete_jobs.erase(i);
 		}
@@ -233,7 +232,7 @@ Dump()
 }
 
 void
-PublishJob(const string &key)
+PublishJob(const string &key, Sender &sender)
 {
 	if (!config.address.empty()) {
 		Message message;
