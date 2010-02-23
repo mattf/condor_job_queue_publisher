@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
 		   triggers.str().c_str());
 
 	if (config.daemon && daemon(0, 0)) {
-		syslog(LOG_ERR, "daemon(0,0) failed: %d (%s)", errno, strerror(errno));
+		syslog(LOG_ERR, "daemon(0,0) failed: errno = %d (%m)", errno);
 		exit(1);
 	}
 
