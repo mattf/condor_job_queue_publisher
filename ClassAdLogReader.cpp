@@ -64,7 +64,7 @@ ClassAdLogReader::Poll() {
 	fst = parser.openFile();
 	if(fst == FILE_OPEN_ERROR) {
 		syslog(LOG_ERR,
-			   "Failed to open %s: errno=%d",
+			   "Failed to open %s: errno=%d (%m)",
 			   parser.getJobQueueName(), errno);
 		return;
 	}

@@ -114,7 +114,6 @@ ClassAdLogParser::openFile() {
     log_fp = fopen(job_queue_name, "r");
 
     if (log_fp == NULL) {
-        syslog(LOG_ERR, "Warning: Unable to open the %s file", job_queue_name);
         return FILE_OPEN_ERROR;
     }
 	return FILE_OP_SUCCESS;
