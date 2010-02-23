@@ -16,30 +16,6 @@
  *
  ***************************************************************/
 
-#include <set>
+#include "Config.h"
 
-#include <string>
-
-#include <strings.h>
-
-struct caseltstr
-{
-	bool operator()(const char *s1, const char *s2) const
-	{
-		return strcasecmp(s1, s2) < 0;
-	}
-};
-
-struct Config
-{
-	typedef std::set<const char *, caseltstr> TriggersType;
-
-	std::string file;
-	std::string broker;
-	std::string address;
-	int interval;
-	TriggersType triggers;
-	bool dump;
-};
-
-extern Config config;
+Config config;

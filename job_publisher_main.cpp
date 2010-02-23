@@ -47,14 +47,13 @@ void Dump();
 
 void PublishJob(const string &key, Sender &sender);
 
-Config config;
-
 void
 usage(char *argv[])
 {
 	syslog(LOG_ERR,
 		   "usage: %s "
 		   "--file <job_queue.log> "
+		   "[--trigger <attribute name>]* "
 		   "[--broker <broker url: amqp:tcp:127.0.0.1:5672>] "
 		   "[--address <queue or topic>] "
 		   "[--interval <poll interval: 15>]\n",
@@ -67,6 +66,7 @@ parse_args(int argc, char *argv[], Config &config)
 {
 	static struct option options[] = {
 		{"file", 1, NULL, 'f'},
+		{"trigger", 1, NULL, 't'},
 		{"broker", 1, NULL, 'b'},
 		{"address", 1, NULL, 'a'},
 		{"interval", 1, NULL, 'i'},
@@ -76,12 +76,15 @@ parse_args(int argc, char *argv[], Config &config)
 
 	int c;
 	while (1) {
-		c = getopt_long(argc, argv, ":f:b:a:i:d", options, NULL);
+		c = getopt_long(argc, argv, ":f:t:b:a:i:d", options, NULL);
 		if (-1 == c) break;
 
 		switch (c) {
 		case 'f':
 			config.file = optarg;
+			break;
+		case 't':
+			config.triggers.insert(optarg);
 			break;
 		case 'b':
 			config.broker = optarg;
@@ -140,10 +143,20 @@ int main(int argc, char *argv[])
 
 	parse_args(argc, argv, config);
 
-	syslog(LOG_INFO, "config -- file = %s; broker = %s; address: %s\n",
+	stringstream triggers;
+	for (Config::TriggersType::const_iterator i = config.triggers.begin();
+		 config.triggers.end() != i;
+		 i++) {
+		triggers << (*i) << " ";
+	}
+	if (triggers.str().empty()) {
+		triggers << "*";
+	}
+	syslog(LOG_INFO, "config -- file = %s; broker = %s; address: %s; triggers: %s\n",
 		   config.file.c_str(),
 		   config.broker.c_str(),
-		   config.address.c_str());
+		   config.address.c_str(),
+		   triggers.str().c_str());
 
 	if (!config.address.empty()) {
 		connection.open(config.broker);

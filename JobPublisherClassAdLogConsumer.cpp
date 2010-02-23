@@ -20,6 +20,8 @@
 
 #include "Globals.h"
 
+#include "Config.h"
+
 #include "Job.h"
 
 
@@ -101,7 +103,9 @@ JobPublisherClassAdLogConsumer::SetAttribute(const char *_key,
 
 	(*element).second.Set(name, value);
 
-	if ('0' != key[0]) {
+	if ('0' != key[0] &&
+		(config.triggers.empty() ||
+		 config.triggers.end() != config.triggers.find(_name))) {
 		g_dirty_jobs.insert(key);
 	}
 
