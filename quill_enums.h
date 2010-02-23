@@ -57,15 +57,6 @@ enum FileOpErrCode {    FILE_OPEN_ERROR,
 						FILE_READ_EOF,
                         FILE_READ_SUCCESS,
                         FILE_OP_SUCCESS};
-
-enum QuillAttrDataType {
-	CONDOR_TT_TYPE_CLOB,
-	CONDOR_TT_TYPE_STRING,
-	CONDOR_TT_TYPE_NUMBER,
-	CONDOR_TT_TYPE_TIMESTAMP,
-	CONDOR_TT_TYPE_BOOL,
-	CONDOR_TT_TYPE_UNKNOWN
-};
 #endif
 
 
