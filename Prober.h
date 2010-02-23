@@ -22,7 +22,11 @@
 
 #include <time.h>
 
-#include "quill_enums.h"
+enum ProbeResultType {  PROBE_ERROR, 
+						NO_CHANGE, 
+						INIT_QUILL, 
+						ADDITION, 
+						COMPRESSED};
 
 //! Prober
 /*! this polls and probes Job Qeueue Log (job_queue.log) file.

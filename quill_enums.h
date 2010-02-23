@@ -50,13 +50,6 @@ enum QuillErrCode {	    QUILL_FAILURE,
 						DONE_PROCADS_CUR_CLUSTERAD,
 						QUILL_SUCCESS};
 
-
-enum ProbeResultType {  PROBE_ERROR, 
-						NO_CHANGE, 
-						INIT_QUILL, 
-						ADDITION, 
-						COMPRESSED};
-
 enum FileOpErrCode {    FILE_OPEN_ERROR,
 						FILE_READ_ERROR,
 						FILE_WRITE_ERROR,
