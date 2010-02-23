@@ -115,6 +115,7 @@ ClassAdLogReader::IncrementalLoad()
 		int op_type;
 
 		err = parser.readLogEntry(op_type);
+		assert(err != FILE_FATAL_ERROR); // XXX
 		if (err == FILE_READ_SUCCESS) {
 			bool processed = ProcessLogEntry(parser.getCurCALogEntry(), &parser);
 			if(!processed) {
