@@ -58,16 +58,6 @@ enum FileOpErrCode {    FILE_OPEN_ERROR,
                         FILE_READ_SUCCESS,
                         FILE_OP_SUCCESS};
 
-
-typedef enum
-	{
-		T_ORACLE, 
-		T_PGSQL, 
-		T_DB2, 
-		T_SQLSERVER,
-		T_MYSQL
-	} dbtype;
-
 enum QuillAttrDataType {
 	CONDOR_TT_TYPE_CLOB,
 	CONDOR_TT_TYPE_STRING,
