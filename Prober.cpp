@@ -161,7 +161,7 @@ Prober::probe(ClassAdLogEntry *curCALogEntry,
 	if ( caLogParser.getCurCALogEntry()->op_type !=
 		 CondorLogOp_LogHistoricalSequenceNumber )
 	{
-		printf("ERROR: quill prober expects first classad log entry to be "
+		printf("ERROR: prober expects first classad log entry to be "
 				"type %d, but sees %d instead.",
 				CondorLogOp_LogHistoricalSequenceNumber,
 				caLogParser.getCurCALogEntry()->op_type);
