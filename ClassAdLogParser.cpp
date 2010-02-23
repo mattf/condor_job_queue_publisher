@@ -234,7 +234,9 @@ ClassAdLogParser::readLogEntry(int &op_type)
 		if( !feof( log_fp ) ) {
 			fclose(log_fp);
             log_fp = NULL;
-			syslog(LOG_ERR, "Failed recovering from corrupt file, errno=%d", errno );
+			syslog(LOG_ERR,
+				   "Failed recovering from corrupt file, errno=%d (%m)",
+				   errno);
 			return FILE_FATAL_ERROR;
 		}
 
