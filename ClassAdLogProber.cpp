@@ -139,7 +139,7 @@ ClassAdLogProber::probe(ClassAdLogEntry *curCALogEntry,
 
 	//TODO: should use condor's StatInfo instead.
 	if (fstat(job_queue_fd, &filestat) == -1)
-		syslog(LOG_ERR, "ERROR: calling stat(): errno = %d (%m)", errno);
+		syslog(LOG_ERR, "ERROR: calling stat(): errno=%d (%m)", errno);
 	
 	syslog(LOG_DEBUG, "=== Current Probing Information ===");
 	syslog(LOG_DEBUG,
