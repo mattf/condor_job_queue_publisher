@@ -23,7 +23,31 @@
 #include <limits.h> // for _POSIX_PATH_MAX
 #include <stdio.h>
 
-#include "quill_enums.h"
+enum QuillErrCode {	    QUILL_FAILURE,
+						FAILURE_QUERY_PROCADS_HOR,
+						FAILURE_QUERY_PROCADS_VER,
+						FAILURE_QUERY_CLUSTERADS_HOR,
+						FAILURE_QUERY_CLUSTERADS_VER,
+						FAILURE_QUERY_HISTORYADS_HOR,
+						FAILURE_QUERY_HISTORYADS_VER,
+						JOB_QUEUE_EMPTY,
+						HISTORY_EMPTY,
+						DONE_JOBS_CURSOR,
+						DONE_HISTORY_HOR_CURSOR,
+						DONE_HISTORY_VER_CURSOR,
+						DONE_CLUSTERADS_CURSOR,
+						DONE_PROCADS_CURSOR,
+						DONE_PROCADS_CUR_CLUSTERAD,
+						QUILL_SUCCESS};
+
+enum FileOpErrCode {    FILE_OPEN_ERROR,
+						FILE_READ_ERROR,
+						FILE_WRITE_ERROR,
+						FILE_FATAL_ERROR,
+						FILE_READ_EOF,
+                        FILE_READ_SUCCESS,
+                        FILE_OP_SUCCESS};
+
 
 //used to distinguish between first and successive calls
 #define IMPOSSIBLE_OFFSET -10000
