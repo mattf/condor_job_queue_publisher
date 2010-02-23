@@ -78,6 +78,7 @@ bool
 JobPublisherJobLogConsumer::DestroyClassAd(const char *_key)
 {
 	string key = _key;
+	g_dirty_jobs.erase(key);
 	g_delete_jobs.insert(key);
 //	g_jobs.erase(key);
 
