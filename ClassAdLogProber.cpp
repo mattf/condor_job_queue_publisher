@@ -56,7 +56,6 @@ void
 ClassAdLogProber::setJobQueueName(const char* jqn)
 {
 	assert(jqn);
-
 	strcpy(job_queue_name, jqn);
 }
 
