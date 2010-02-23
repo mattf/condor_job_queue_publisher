@@ -24,6 +24,7 @@
 
 #include "Job.h"
 
+#include <syslog.h>
 
 JobPublisherClassAdLogConsumer::JobPublisherClassAdLogConsumer()
 { }
@@ -96,8 +97,9 @@ JobPublisherClassAdLogConsumer::SetAttribute(const char *_key,
 	JobCollectionType::iterator element = g_jobs.find(key);
 
 	if (g_jobs.end() == element) {
-		printf("error reading %s: no such job '%s' for '%s = %s'\n",
-				m_reader->GetClassAdLogFileName(), _key, _name, _value);
+		syslog(LOG_ERR,
+			   "error reading %s: no such job '%s' for '%s = %s'\n",
+			   m_reader->GetClassAdLogFileName(), _key, _name, _value);
 		return false;
 	}
 
@@ -121,8 +123,9 @@ JobPublisherClassAdLogConsumer::DeleteAttribute(const char *_key,
 	JobCollectionType::iterator element = g_jobs.find(key);
 
 	if (g_jobs.end() == element) {
-		printf("error reading %s: no such job '%s' for 'delete %s'\n",
-				m_reader->GetClassAdLogFileName(), _key, _name);
+		syslog(LOG_ERR,
+			   "error reading %s: no such job '%s' for 'delete %s'\n",
+			   m_reader->GetClassAdLogFileName(), _key, _name);
 		return false;
 	}
 

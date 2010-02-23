@@ -22,6 +22,8 @@
 
 #include <stdlib.h>
 
+#include <syslog.h>
+
 #include <string>
 
 #include <errno.h>
@@ -61,7 +63,9 @@ ClassAdLogReader::Poll() {
 
 	fst = parser.openFile();
 	if(fst == FILE_OPEN_ERROR) {
-		printf("Failed to open %s: errno=%d\n",parser.getJobQueueName(),errno);
+		syslog(LOG_ERR,
+			   "Failed to open %s: errno=%d",
+			   parser.getJobQueueName(), errno);
 		return;
 	}
 
@@ -108,17 +112,20 @@ ClassAdLogReader::IncrementalLoad()
 
 		err = parser.readLogEntry(op_type);
 		if (err == FILE_READ_SUCCESS) {
-			//dprintf(D_ALWAYS, "Read op_type %d\n",op_type);
 			bool processed = ProcessLogEntry(parser.getCurCALogEntry(), &parser);
 			if(!processed) {
-				printf("error reading %s: Failed to process log entry.\n",GetClassAdLogFileName());
+				syslog(LOG_ERR,
+					   "error reading %s: Failed to process log entry.",
+					   GetClassAdLogFileName());
 				return false;
 			}
 		}
 	}while(err == FILE_READ_SUCCESS);
 	if (FILE_FATAL_ERROR == err) { exit(1); }
 	if (err != FILE_READ_EOF) {
-		printf("error reading from %s: %d, %d\n",GetClassAdLogFileName(),err,errno);
+		syslog(LOG_ERR,
+			   "error reading from %s: %d, %d",
+			   GetClassAdLogFileName(), err, errno);
 		return false;
 	}
 	return true;
@@ -157,7 +164,9 @@ ClassAdLogReader::ProcessLogEntry(ClassAdLogEntry *log_entry,
 	case CondorLogOp_LogHistoricalSequenceNumber:
 		break;
 	default:
-		printf("error reading %s: Unsupported Job Queue Command\n",GetClassAdLogFileName());
+		syslog(LOG_ERR,
+			   "error reading %s: Unsupported Job Queue Command",
+			   GetClassAdLogFileName());
 		return false;
 	}
 	return true;

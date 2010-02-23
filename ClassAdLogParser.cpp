@@ -22,6 +22,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include <errno.h>
+#include <syslog.h>
 
 #include "ClassAdLogEntry.h"
 #include "ClassAdLogParser.h"
@@ -113,7 +114,7 @@ ClassAdLogParser::openFile() {
     log_fp = fopen(job_queue_name, "r");
 
     if (log_fp == NULL) {
-        printf("Warning: Unable to open the %s file!\n", job_queue_name);
+        syslog(LOG_ERR, "Warning: Unable to open the %s file", job_queue_name);
         return FILE_OPEN_ERROR;
     }
 	return FILE_OP_SUCCESS;
@@ -215,7 +216,7 @@ ClassAdLogParser::readLogEntry(int &op_type)
 		int		op;
 
 		if( !log_fp ) {
-			printf("Failed fdopen() when recovering corrupt log file");
+			syslog(LOG_ERR, "Failed fdopen() when recovering corrupt log file");
 			return FILE_FATAL_ERROR;
 		}
 
@@ -226,7 +227,7 @@ ClassAdLogParser::readLogEntry(int &op_type)
 			}
 			if( op == CondorLogOp_EndTransaction ) {
 					// aargh!  bad record in transaction.  abort!
-				printf("Bad record with op=%d in corrupt logfile", op_type);
+				syslog(LOG_ERR, "Bad record with op=%d in corrupt logfile", op_type);
 				return FILE_FATAL_ERROR;
 			}
 		}
@@ -234,7 +235,7 @@ ClassAdLogParser::readLogEntry(int &op_type)
 		if( !feof( log_fp ) ) {
 			fclose(log_fp);
             log_fp = NULL;
-			printf("Failed recovering from corrupt file, errno=%d", errno );
+			syslog(LOG_ERR, "Failed recovering from corrupt file, errno=%d", errno );
 			return FILE_FATAL_ERROR;
 		}
 
