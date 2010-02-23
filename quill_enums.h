@@ -20,11 +20,6 @@
 #ifndef __QUILL_ENUMS_H__
 #define __QUILL_ENUMS_H__
 
-enum    XactState {    NOT_IN_XACT,
-                        BEGIN_XACT,
-                        COMMIT_XACT,
-                        ABORT_XACT};
-
 enum QuillErrCode {	    QUILL_FAILURE,
 						FAILURE_QUERY_PROCADS_HOR,
 						FAILURE_QUERY_PROCADS_VER,
