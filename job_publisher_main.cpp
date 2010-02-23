@@ -55,9 +55,9 @@ usage(char *argv[])
 	syslog(LOG_ERR,
 		   "usage: %s "
 		   "--file <job_queue.log> "
-		   "[--broker <broker url>] "
+		   "[--broker <broker url: amqp:tcp:127.0.0.1:5672>] "
 		   "[--address <queue or topic>] "
-		   "[--interval <poll interval>]\n",
+		   "[--interval <poll interval: 15>]\n",
 		   argv[0]);
 	exit(1);
 }
