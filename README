@@ -25,8 +25,10 @@ file and generate AMQP messages for jobs found in the log. The
 JobPublisher constructs jobs from the underlying events read from the
 log.
 
+Note:
+ * If passing --daemon, --file must be a full path relative to /
+
 Todo:
- * Deamonize
  * Handle HUP, TERM, QUIT signals
  * Work out best way to tag messages with SCHEDD_NAME and job id
 

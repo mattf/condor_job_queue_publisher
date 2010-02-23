@@ -53,6 +53,7 @@ usage(char *argv[])
 	syslog(LOG_ERR,
 		   "usage: %s "
 		   "--file <job_queue.log> "
+		   "[--daemon] "
 		   "[--trigger <attribute name>]* "
 		   "[--broker <broker url: amqp:tcp:127.0.0.1:5672>] "
 		   "[--address <queue or topic>] "
@@ -66,22 +67,26 @@ parse_args(int argc, char *argv[], Config &config)
 {
 	static struct option options[] = {
 		{"file", 1, NULL, 'f'},
+		{"daemon", 0, NULL, 'd'},
 		{"trigger", 1, NULL, 't'},
 		{"broker", 1, NULL, 'b'},
 		{"address", 1, NULL, 'a'},
 		{"interval", 1, NULL, 'i'},
-		{"dump", 0, NULL, 'd'},
+		{"dump", 0, NULL, 'u'},
 		{NULL, NULL, NULL, NULL}
 	};
 
 	int c;
 	while (1) {
-		c = getopt_long(argc, argv, ":f:t:b:a:i:d", options, NULL);
+		c = getopt_long(argc, argv, ":fd:t:b:a:i:u", options, NULL);
 		if (-1 == c) break;
 
 		switch (c) {
 		case 'f':
 			config.file = optarg;
+			break;
+		case 'd':
+			config.daemon = true;
 			break;
 		case 't':
 			config.triggers.insert(optarg);
@@ -99,7 +104,7 @@ parse_args(int argc, char *argv[], Config &config)
 				usage(argv);
 			}
 			break;
-		case 'd':
+		case 'u':
 			config.dump = true;
 			break;
 		case ':':
@@ -138,6 +143,7 @@ int main(int argc, char *argv[])
 
 	config.broker = "amqp:tcp:127.0.0.1:5672";
 	config.interval = 15;
+	config.daemon = false;
 
 	openlog("job_publisher", LOG_PID|LOG_PERROR, LOG_DAEMON);
 
@@ -152,11 +158,18 @@ int main(int argc, char *argv[])
 	if (triggers.str().empty()) {
 		triggers << "*";
 	}
-	syslog(LOG_INFO, "config -- file = %s; broker = %s; address: %s; triggers: %s\n",
+	syslog(LOG_INFO,
+		   "config -- file = %s; daemon = %s; broker = %s; address: %s; triggers: %s\n",
 		   config.file.c_str(),
+		   config.daemon ? "yes" : "no",
 		   config.broker.c_str(),
 		   config.address.c_str(),
 		   triggers.str().c_str());
+
+	if (config.daemon && daemon(0, 0)) {
+		syslog(LOG_ERR, "daemon(0,0) failed: %d (%s)", errno, strerror(errno));
+		exit(1);
+	}
 
 	if (!config.address.empty()) {
 		connection.open(config.broker);

@@ -35,6 +35,7 @@ struct Config
 	typedef std::set<const char *, caseltstr> TriggersType;
 
 	std::string file;
+	bool daemon;
 	std::string broker;
 	std::string address;
 	int interval;
