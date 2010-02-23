@@ -1,7 +1,37 @@
 ClassAd Log Reader Library -
 
+A library to tail and parse a job_queue.log file, being written by a
+condor_schedd. Useful for replicating the condor_schedd's state.
+
+Public interface is in ClassAdLogReader.h
+
+A user of the library writes a ClassAdLobConsumer, constructs a
+ClassAdLogReader given their consumer, and calls
+ClassAdLogReader::Poll. The library provides events to the consumer as
+they are discovered in the underlying job_queue.log file. See
+ClassAdLogReader for a description and semantics of events.
+
+Files:
+   ClassAdLogReader.{h,cpp}
+   ClassAdLogProber.{h,cpp}
+   ClassAdLogParser.{h,cpp}
+   ClassAdLogEntry.{h,cpp}
+
 
 Job Publisher --
+
+A daemon using the ClassAd Log Reader library to tail a job_queue.log
+file and generate AMQP messages for jobs found in the log. The
+JobPublisher constructs jobs from the underlying events read from the
+log.
+
+Todo:
+ * Deamonize
+ * Handle HUP, TERM, QUIT signals
+ * Accept a set of attribute that trigger a publish
+ * Work out best way to tag messages with SCHEDD_NAME and job id
+ * Allow configuration of Poll interval
+
 
 Memory Performance -
 
@@ -101,4 +131,3 @@ consumes 190MB to represent the data in memory. majority of memory
 usage from 10M objects holding string data.
 
 if using a char * on a 64 bit machine, 10M objects is ~75MB
-
