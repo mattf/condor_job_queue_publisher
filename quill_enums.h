@@ -20,14 +20,6 @@
 #ifndef __QUILL_ENUMS_H__
 #define __QUILL_ENUMS_H__
 
-//the IS was prepended to the below constants in order 
-//to avoid conflict with occurences of the same symbol
-//in other parts of condor code, e.g. ../h/proc.h
-
-enum    JobIdType {   IS_CLUSTER_ID,
-                     	IS_PROC_ID,
-                        IS_UNKNOWN_ID};
-
 enum    XactState {    NOT_IN_XACT,
                         BEGIN_XACT,
                         COMMIT_XACT,
