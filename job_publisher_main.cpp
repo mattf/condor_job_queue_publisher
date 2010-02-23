@@ -34,8 +34,8 @@
 #include <qpid/messaging/Sender.h>
 #include <qpid/messaging/Session.h>
 
-#include "JobLogReader.h"
-#include "JobPublisherJobLogConsumer.h"
+#include "ClassAdLogReader.h"
+#include "JobPublisherClassAdLogConsumer.h"
 
 #include "Globals.h"
 
@@ -141,10 +141,11 @@ int main(int argc, char *argv[])
 		sender = session.createSender(config.address);
 	}
 
-	JobPublisherJobLogConsumer *consumer = new JobPublisherJobLogConsumer();
-	JobLogReader *reader = new JobLogReader(consumer);
+	JobPublisherClassAdLogConsumer *consumer =
+		new JobPublisherClassAdLogConsumer();
+	ClassAdLogReader *reader = new ClassAdLogReader(consumer);
 
-	reader->SetJobLogFileName(config.file.c_str());
+	reader->SetClassAdLogFileName(config.file.c_str());
 
 	while (1) {
 		reader->Poll();

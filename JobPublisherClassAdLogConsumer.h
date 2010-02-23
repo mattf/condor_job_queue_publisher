@@ -19,7 +19,7 @@
 #ifndef _JOBPUBLISHERJOBLOGCONSUMER_H
 #define _JOBPUBLISHERJOBLOGCONSUMER_H
 
-#include "JobLogReader.h"
+#include "ClassAdLogReader.h"
 
 #include <string>
 #include <map>
@@ -28,11 +28,11 @@
 using namespace std;
 
 
-class JobPublisherJobLogConsumer: public JobLogConsumer
+class JobPublisherClassAdLogConsumer: public ClassAdLogConsumer
 {
 public:
-	JobPublisherJobLogConsumer();
-	~JobPublisherJobLogConsumer();
+	JobPublisherClassAdLogConsumer();
+	~JobPublisherClassAdLogConsumer();
 
 	void Reset();
 	bool NewClassAd(const char *key,
@@ -44,12 +44,12 @@ public:
 					  const char *value);
 	bool DeleteAttribute(const char *key,
 						 const char *name);
-	void SetJobLogReader(JobLogReader *_reader) { m_reader = _reader; }
+	void SetClassAdLogReader(ClassAdLogReader *_reader) { m_reader = _reader; }
 
 
 private:
 
-	JobLogReader *m_reader;
+	ClassAdLogReader *m_reader;
 };
 
 #endif /* _JOBPUBLISHERJOBLOGCONSUMER_H */

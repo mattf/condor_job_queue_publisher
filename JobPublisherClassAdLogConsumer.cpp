@@ -16,27 +16,27 @@
  *
  ***************************************************************/
 
-#include "JobPublisherJobLogConsumer.h"
+#include "JobPublisherClassAdLogConsumer.h"
 
 #include "Globals.h"
 
 #include "Job.h"
 
 
-JobPublisherJobLogConsumer::JobPublisherJobLogConsumer()
+JobPublisherClassAdLogConsumer::JobPublisherClassAdLogConsumer()
 { }
 
-JobPublisherJobLogConsumer::~JobPublisherJobLogConsumer()
+JobPublisherClassAdLogConsumer::~JobPublisherClassAdLogConsumer()
 { }
 
 void
-JobPublisherJobLogConsumer::Reset()
+JobPublisherClassAdLogConsumer::Reset()
 {
 	g_jobs.clear();
 }
 
 bool
-JobPublisherJobLogConsumer::NewClassAd(const char *_key,
+JobPublisherClassAdLogConsumer::NewClassAd(const char *_key,
 									const char */*type*/,
 									const char */*target*/)
 {
@@ -75,7 +75,7 @@ JobPublisherJobLogConsumer::NewClassAd(const char *_key,
 }
 
 bool
-JobPublisherJobLogConsumer::DestroyClassAd(const char *_key)
+JobPublisherClassAdLogConsumer::DestroyClassAd(const char *_key)
 {
 	string key = _key;
 	g_dirty_jobs.erase(key);
@@ -85,7 +85,7 @@ JobPublisherJobLogConsumer::DestroyClassAd(const char *_key)
 }
 
 bool
-JobPublisherJobLogConsumer::SetAttribute(const char *_key,
+JobPublisherClassAdLogConsumer::SetAttribute(const char *_key,
 									  const char *_name,
 									  const char *_value)
 {
@@ -95,7 +95,7 @@ JobPublisherJobLogConsumer::SetAttribute(const char *_key,
 
 	if (g_jobs.end() == element) {
 		printf("error reading %s: no such job '%s' for '%s = %s'\n",
-				m_reader->GetJobLogFileName(), _key, _name, _value);
+				m_reader->GetClassAdLogFileName(), _key, _name, _value);
 		return false;
 	}
 
@@ -109,7 +109,7 @@ JobPublisherJobLogConsumer::SetAttribute(const char *_key,
 }
 
 bool
-JobPublisherJobLogConsumer::DeleteAttribute(const char *_key,
+JobPublisherClassAdLogConsumer::DeleteAttribute(const char *_key,
 										 const char *_name)
 {
 	string key = _key;
@@ -118,7 +118,7 @@ JobPublisherJobLogConsumer::DeleteAttribute(const char *_key,
 
 	if (g_jobs.end() == element) {
 		printf("error reading %s: no such job '%s' for 'delete %s'\n",
-				m_reader->GetJobLogFileName(), _key, _name);
+				m_reader->GetClassAdLogFileName(), _key, _name);
 		return false;
 	}
 
