@@ -182,13 +182,13 @@ int main(int argc, char *argv[])
 				message.setSubject("DONE");
 				sender.send(message);
 			}
-			consumer->Reset();
 			break;
 		}
 
 		sleep(config.interval);
 	}
 
+	consumer->Reset();
 	delete reader;
 
 	if (!config.address.empty()) {
