@@ -17,14 +17,16 @@
  *
  ***************************************************************/
 
+#ifdef _NO_CONDOR_
+#include <assert.h> // for assert
+#include <errno.h> // for errno
+#include <syslog.h> // for syslog, LOG_ERR
+#else
+#include "condor_common.h"
+#include "condor_debug.h"
+#endif
 
 #include "ClassAdLogReader.h"
-
-#include <stdlib.h>
-#include <syslog.h>
-#include <string>
-#include <assert.h>
-#include <errno.h>
 
 ClassAdLogReader::ClassAdLogReader(ClassAdLogConsumer *consumer):
 	m_consumer(consumer)

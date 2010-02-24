@@ -17,12 +17,17 @@
  *
  ***************************************************************/
 
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <assert.h>
-#include <errno.h>
-#include <syslog.h>
+#ifdef _NO_CONDOR_
+#include <stdlib.h> // for free, atoi, malloc, realloc
+#include <string.h> // for strcpy, strdup
+#include <ctype.h> // for isspace
+#include <assert.h> // for assert
+#include <errno.h> // for errno
+#include <syslog.h> // for syslog, LOG_ERR
+#else
+#include "condor_common.h"
+#include "condor_io.h"
+#endif
 
 #include "ClassAdLogEntry.h"
 #include "ClassAdLogParser.h"

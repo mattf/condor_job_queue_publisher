@@ -16,7 +16,7 @@
 # *
 # ***************************************************************/
 
-CXXFLAGS=-g
+CXXFLAGS=-g -D_NO_CONDOR_
 LDFLAGS=-pthread
 
 JOB_PUBLISHER=job_publisher

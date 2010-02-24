@@ -20,7 +20,8 @@
 #ifndef _CLASSADLOGPROBER_H_
 #define _CLASSADLOGPROBER_H_
 
-#include <time.h>
+#include <time.h> // for time_t
+#include <unistd.h> // for size_t
 
 enum ProbeResultType {  PROBE_ERROR, 
 						PROBE_FATAL_ERROR,

@@ -17,15 +17,19 @@
  *
  ***************************************************************/
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <limits.h>
-#include <string.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <syslog.h>
-#include <errno.h>
+#ifdef _NO_CONDOR_
+#include <sys/types.h> // for fstat, struct stat
+#include <sys/stat.h> // for fstat, struct stat
+#include <unistd.h> // for fstat, struct stat
+#include <limits.h> // for _POSIX_PATH_MAX
+#include <string.h> // for strcpy
+#include <stdlib.h> // for atol
+#include <assert.h> // for assert
+#include <errno.h> // for errno
+#include <syslog.h> // for syslog, LOG_ERR
+#else
+#include "condor_common.h"
+#endif
 
 #include "ClassAdLogEntry.h"
 #include "ClassAdLogProber.h"
