@@ -23,22 +23,8 @@
 #include <limits.h> // for _POSIX_PATH_MAX
 #include <stdio.h>
 
-enum QuillErrCode {	    QUILL_FAILURE,
-						FAILURE_QUERY_PROCADS_HOR,
-						FAILURE_QUERY_PROCADS_VER,
-						FAILURE_QUERY_CLUSTERADS_HOR,
-						FAILURE_QUERY_CLUSTERADS_VER,
-						FAILURE_QUERY_HISTORYADS_HOR,
-						FAILURE_QUERY_HISTORYADS_VER,
-						JOB_QUEUE_EMPTY,
-						HISTORY_EMPTY,
-						DONE_JOBS_CURSOR,
-						DONE_HISTORY_HOR_CURSOR,
-						DONE_HISTORY_VER_CURSOR,
-						DONE_CLUSTERADS_CURSOR,
-						DONE_PROCADS_CURSOR,
-						DONE_PROCADS_CUR_CLUSTERAD,
-						QUILL_SUCCESS};
+enum ParserErrCode {    PARSER_FAILURE,
+						PARSER_SUCCESS};
 
 enum FileOpErrCode {    FILE_OPEN_ERROR,
 						FILE_READ_ERROR,
@@ -93,20 +79,20 @@ public:
 	//!	set a current file offset
 	void 	setCurOffset(long offset);
 	//!	get a current classad log entry data as a New ClassAd command
-	QuillErrCode 	getNewClassAdBody(char*& key, 
+	ParserErrCode 	getNewClassAdBody(char*& key, 
 									  char*& mytype, 
 									  char*& targettype);
 	//!	get a current classad log entry data as a Destroy ClassAd command
-	QuillErrCode 	getDestroyClassAdBody(char*& key);
+	ParserErrCode 	getDestroyClassAdBody(char*& key);
 	//!	get a current classad log entry data as a Set Attribute command
-	QuillErrCode 	getSetAttributeBody(char*& key, 
+	ParserErrCode 	getSetAttributeBody(char*& key, 
 										char*& name, 
 										char*& value);
 	//!	get a current classad log entry data as a Delete Attribute command
-	QuillErrCode 	getDeleteAttributeBody(char*& key, char*& name);
+	ParserErrCode 	getDeleteAttributeBody(char*& key, char*& name);
 
 	//!	get the body of a historical sequence number command
-	QuillErrCode	getLogHistoricalSNBody(char*& seqnum, char*& timestamp);
+	ParserErrCode	getLogHistoricalSNBody(char*& seqnum, char*& timestamp);
 
 	//! read a classad log entry in the current offset of a file
 	FileOpErrCode readLogEntry(int &op_type);
