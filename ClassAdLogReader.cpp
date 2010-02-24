@@ -21,11 +21,9 @@
 #include "ClassAdLogReader.h"
 
 #include <stdlib.h>
-
 #include <syslog.h>
-
 #include <string>
-
+#include <assert.h>
 #include <errno.h>
 
 ClassAdLogReader::ClassAdLogReader(ClassAdLogConsumer *consumer):
