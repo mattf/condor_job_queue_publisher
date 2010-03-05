@@ -200,8 +200,11 @@ int main(int argc, char *argv[])
 		}
 		g_dirty_jobs.clear();
 
-		for (JobSetType::const_iterator i = g_delete_jobs.begin();
-			 g_delete_jobs.end() != i;
+			// XXX TODO XXX
+			// This is a hack to delete child jobs before parent
+			// jobs. Fix properly with a shared_ptr.
+		for (JobSetType::const_reverse_iterator i = g_delete_jobs.rbegin();
+			 g_delete_jobs.rend() != i;
 			 i++) {
 			PublishJob((*i), sender);
 			g_jobs.erase((*i));
