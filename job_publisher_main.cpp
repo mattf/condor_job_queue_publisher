@@ -197,16 +197,16 @@ int main(int argc, char *argv[])
 			 g_dirty_jobs.end() != i;
 			 i++) {
 			PublishJob((*i), sender);
-			g_dirty_jobs.erase(i);
 		}
+		g_dirty_jobs.clear();
 
 		for (JobSetType::const_iterator i = g_delete_jobs.begin();
 			 g_delete_jobs.end() != i;
 			 i++) {
 			PublishJob((*i), sender);
 			g_jobs.erase((*i));
-			g_delete_jobs.erase(i);
 		}
+		g_delete_jobs.clear();
 
 		if (config.dump) {
 			Dump();
