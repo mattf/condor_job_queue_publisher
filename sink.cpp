@@ -90,7 +90,9 @@ main(int argc, char *argv[])
 	connection.open(broker);
 	Session session = connection.newSession();
 	Receiver receiver = session.createReceiver(address);
+	receiver.setCapacity(1024);
 
+	int count = 0;
 	while (1) {
 		Message message = receiver.fetch();
 		MapView content(message);
@@ -107,8 +109,9 @@ main(int argc, char *argv[])
 			 i++) {
 			cout << id << " " << (*i).first << " " << (*i).second << endl;
 		}
-		session.acknowledge();
+		if (!(++count % 128)) session.acknowledge();
 	}
+	session.acknowledge();
 
 	receiver.close();
 	connection.close();
