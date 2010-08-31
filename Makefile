@@ -16,11 +16,11 @@
 # *
 # ***************************************************************/
 
-CXXFLAGS=-g -D_NO_CONDOR_ -O2
+CXXFLAGS=-g -D_NO_CONDOR_ -O2 -Ilib
 LDFLAGS=-pthread
 
 JOB_PUBLISHER=job_publisher
-JOB_PUBLISHER_OBJS=job_publisher_main.o JobPublisherClassAdLogConsumer.o Job.o Globals.o Config.o ClassAdLogReader.o ClassAdLogEntry.o ClassAdLogProber.o ClassAdLogParser.o
+JOB_PUBLISHER_OBJS=job_publisher_main.o JobPublisherClassAdLogConsumer.o Job.o Globals.o Config.o lib/libclassadlogreader.a
 JOB_PUBLISHER_LIBS=-lqpidcommon -lqpidclient
 
 TEST_JOB=test_Job
@@ -37,6 +37,7 @@ SINK_LIBS=-lqpidcommon -lqpidclient
 all: $(JOB_PUBLISHER) $(TEST_JOB) $(MEMORY_PERFORMANCE) $(SINK)
 
 clean:
+	(cd lib; make clean)
 	rm -f $(JOB_PUBLISHER) $(JOB_PUBLISHER_OBJS)
 	rm -f $(TEST_JOB) $(TEST_JOB_OBJS)
 	rm -f $(MEMORY_PERFORMANCE) $(MEMORY_PERFORMANCE_OBJS)
@@ -60,3 +61,5 @@ $(MEMORY_PERFORMANCE): $(MEMORY_PERFORMANCE_OBJS)
 $(SINK): $(SINK_OBJS)
 	g++ $(LDFLAGS) -g -o $@ $^ $(SINK_LIBS)
 
+lib/libclassadlogreader.a: lib/Makefile
+	(cd lib; make)
