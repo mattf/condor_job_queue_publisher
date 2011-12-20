@@ -30,6 +30,8 @@
 
 #include <errno.h>
 
+#include <sstream>
+
 #include <qpid/messaging/Connection.h>
 #include <qpid/messaging/Message.h>
 #include <qpid/messaging/Sender.h>
