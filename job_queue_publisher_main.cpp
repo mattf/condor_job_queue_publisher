@@ -37,6 +37,8 @@
 #include <qpid/messaging/Sender.h>
 #include <qpid/messaging/Session.h>
 
+#include <qpid/types/Variant.h>
+
 #include "ClassAdLogReader.h"
 #include "JobQueuePublisherClassAdLogConsumer.h"
 
@@ -45,6 +47,7 @@
 #include "Config.h"
 
 using namespace qpid::messaging;
+using namespace qpid::types;
 
 void Dump();
 
@@ -141,7 +144,6 @@ parse_args(int argc, char *argv[], Config &config)
 int main(int argc, char *argv[])
 {
 	Sender sender;
-	Connection connection;
 	Session session;
 
 	config.broker = "amqp:tcp:127.0.0.1:5672";
@@ -174,9 +176,10 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
+	Connection connection(config.broker);
 	if (!config.address.empty()) {
-		connection.open(config.broker);
-		session = connection.newSession();
+		connection.open();
+		session = connection.createSession();
 		sender = session.createSender(config.address);
 	}
 
@@ -289,7 +292,7 @@ PublishJob(const string &key, Sender &sender)
 {
 	if (!config.address.empty()) {
 		Message message;
-		MapContent content(message);
+		Variant::Map content;
 
 		JobCollectionType::const_iterator job = g_jobs.find(key);
 		assert(g_jobs.end() != job);
@@ -310,7 +313,7 @@ PublishJob(const string &key, Sender &sender)
 			content[(*attr).first] = (*attr).second;
 		}
 
-		content.encode();
+		encode(content, message);
 		sender.send(message);
 	}
 }

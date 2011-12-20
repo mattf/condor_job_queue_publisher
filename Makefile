@@ -21,7 +21,7 @@ LDFLAGS=-pthread
 
 JOB_QUEUE_PUBLISHER=job_queue_publisher
 JOB_QUEUE_PUBLISHER_OBJS=job_queue_publisher_main.o JobQueuePublisherClassAdLogConsumer.o Job.o Globals.o Config.o lib/libclassadlogreader.a
-JOB_QUEUE_PUBLISHER_LIBS=-lqpidcommon -lqpidclient
+JOB_QUEUE_PUBLISHER_LIBS=-lqpidcommon -lqpidclient -lqpidtypes -lqpidmessaging
 
 TEST_JOB=test_Job
 TEST_JOB_OBJS=test_Job.o Job.o
