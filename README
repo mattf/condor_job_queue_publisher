@@ -18,16 +18,16 @@ Files:
    ClassAdLogEntry.{h,cpp}
 
 
-Job Publisher --
+Job Queue Publisher --
 
 A daemon using the ClassAd Log Reader library to tail a job_queue.log
 file and generate AMQP messages for jobs found in the log. The
-JobPublisher constructs jobs from the underlying events read from the
-log.
+JobQueuePublisher constructs jobs from the underlying events read from
+the log.
 
 Note:
  * If passing --daemon, --file must be a full path relative to /
- * To avoid exit by SIGHUP run as "nohup job_publisher ..."
+ * To avoid exit by SIGHUP run as "nohup job_queue_publisher ..."
 
 Todo:
  * Work out best way to tag messages with SCHEDD_NAME and job id
@@ -57,22 +57,22 @@ $ l ../job_queue.log.gen data data.sorted data.uniq data.uniq.sorted
 8.6M -rw-------. 1 matt matt 8.6M 2010-02-21 09:23 data.uniq.sorted
 
 string
-$ ps o pid,vsz,rss,size,cmd $(pidof job_publisher)
+$ ps o pid,vsz,rss,size,cmd $(pidof job_queue_publisher)
   PID    VSZ   RSS    SZ CMD
-10729 573184 571112 570220 ./job_publisher --file ../job_queue.log.gen
+10729 573184 571112 570220 ./job_queue_publisher --file ../job_queue.log.gen
 
 flyweight for Attribute::m_value
-$ ps o pid,vsz,rss,size,cmd $(pidof job_publisher)
+$ ps o pid,vsz,rss,size,cmd $(pidof job_queue_publisher)
   PID    VSZ   RSS    SZ CMD
-10595 383112 381036 380128 ./job_publisher --file ../job_queue.log.gen
+10595 383112 381036 380128 ./job_queue_publisher --file ../job_queue.log.gen
 
 flyweight for Attribute::m_value and name
-$ ps o pid,vsz,rss,size,cmd $(pidof job_publisher)
+$ ps o pid,vsz,rss,size,cmd $(pidof job_queue_publisher)
   PID    VSZ   RSS    SZ CMD
- 2974 206636 204552 203652 ./job_publisher --file ../job_queue.log.gen
+ 2974 206636 204552 203652 ./job_queue_publisher --file ../job_queue.log.gen
 
   PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  DATA COMMAND
- 2974 matt      20   0  201m 199m 1000 S  0.0 10.0   2:12.77 198m job_publisher 
+ 2974 matt      20   0  201m 199m 1000 S  0.0 10.0   2:12.77 198m job_queue_publisher 
 
 
 data.id -

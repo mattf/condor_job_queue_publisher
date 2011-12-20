@@ -16,7 +16,7 @@
  *
  ***************************************************************/
 
-#include "JobPublisherClassAdLogConsumer.h"
+#include "JobQueuePublisherClassAdLogConsumer.h"
 
 #include "Globals.h"
 
@@ -26,20 +26,20 @@
 
 #include <syslog.h>
 
-JobPublisherClassAdLogConsumer::JobPublisherClassAdLogConsumer()
+JobQueuePublisherClassAdLogConsumer::JobQueuePublisherClassAdLogConsumer()
 { }
 
-JobPublisherClassAdLogConsumer::~JobPublisherClassAdLogConsumer()
+JobQueuePublisherClassAdLogConsumer::~JobQueuePublisherClassAdLogConsumer()
 { }
 
 void
-JobPublisherClassAdLogConsumer::Reset()
+JobQueuePublisherClassAdLogConsumer::Reset()
 {
 	g_jobs.clear();
 }
 
 bool
-JobPublisherClassAdLogConsumer::NewClassAd(const char *_key,
+JobQueuePublisherClassAdLogConsumer::NewClassAd(const char *_key,
 									const char */*type*/,
 									const char */*target*/)
 {
@@ -78,7 +78,7 @@ JobPublisherClassAdLogConsumer::NewClassAd(const char *_key,
 }
 
 bool
-JobPublisherClassAdLogConsumer::DestroyClassAd(const char *_key)
+JobQueuePublisherClassAdLogConsumer::DestroyClassAd(const char *_key)
 {
 	string key = _key;
 	g_dirty_jobs.erase(key);
@@ -88,7 +88,7 @@ JobPublisherClassAdLogConsumer::DestroyClassAd(const char *_key)
 }
 
 bool
-JobPublisherClassAdLogConsumer::SetAttribute(const char *_key,
+JobQueuePublisherClassAdLogConsumer::SetAttribute(const char *_key,
 									  const char *_name,
 									  const char *_value)
 {
@@ -115,7 +115,7 @@ JobPublisherClassAdLogConsumer::SetAttribute(const char *_key,
 }
 
 bool
-JobPublisherClassAdLogConsumer::DeleteAttribute(const char *_key,
+JobQueuePublisherClassAdLogConsumer::DeleteAttribute(const char *_key,
 										 const char *_name)
 {
 	string key = _key;

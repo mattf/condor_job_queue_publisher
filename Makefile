@@ -19,9 +19,9 @@
 CXXFLAGS=-g -D_NO_CONDOR_ -O2 -Ilib
 LDFLAGS=-pthread
 
-JOB_PUBLISHER=job_publisher
-JOB_PUBLISHER_OBJS=job_publisher_main.o JobPublisherClassAdLogConsumer.o Job.o Globals.o Config.o lib/libclassadlogreader.a
-JOB_PUBLISHER_LIBS=-lqpidcommon -lqpidclient
+JOB_QUEUE_PUBLISHER=job_queue_publisher
+JOB_QUEUE_PUBLISHER_OBJS=job_queue_publisher_main.o JobQueuePublisherClassAdLogConsumer.o Job.o Globals.o Config.o lib/libclassadlogreader.a
+JOB_QUEUE_PUBLISHER_LIBS=-lqpidcommon -lqpidclient
 
 TEST_JOB=test_Job
 TEST_JOB_OBJS=test_Job.o Job.o
@@ -34,23 +34,23 @@ SINK=sink
 SINK_OBJS=sink.o
 SINK_LIBS=-lqpidcommon -lqpidclient
 
-all: $(JOB_PUBLISHER) $(TEST_JOB) $(MEMORY_PERFORMANCE) $(SINK)
+all: $(JOB_QUEUE_PUBLISHER) $(TEST_JOB) $(MEMORY_PERFORMANCE) $(SINK)
 
 clean:
 	(cd lib; make clean)
-	rm -f $(JOB_PUBLISHER) $(JOB_PUBLISHER_OBJS)
+	rm -f $(JOB_QUEUE_PUBLISHER) $(JOB_QUEUE_PUBLISHER_OBJS)
 	rm -f $(TEST_JOB) $(TEST_JOB_OBJS)
 	rm -f $(MEMORY_PERFORMANCE) $(MEMORY_PERFORMANCE_OBJS)
 	rm -f $(SINK) $(SINK_OBJS)
 
-test: $(TEST_JOB) $(JOB_PUBLISHER) $(SINK)
+test: $(TEST_JOB) $(JOB_QUEUE_PUBLISHER) $(SINK)
 	@echo "NOTE: You better have a broker running with a queue named jp-test-queue"
 	@echo " Try: service qpidd start && qpid-config add queue jp-test-queue"
 	./$(TEST_JOB)
-	sh ./test_job_publisher.sh --address=jp-test-queue
+	sh ./test_job_queue_publisher.sh --address=jp-test-queue
 
-$(JOB_PUBLISHER): $(JOB_PUBLISHER_OBJS)
-	g++ $(LDFLAGS) -o $@ $^ $(JOB_PUBLISHER_LIBS)
+$(JOB_QUEUE_PUBLISHER): $(JOB_QUEUE_PUBLISHER_OBJS)
+	g++ $(LDFLAGS) -o $@ $^ $(JOB_QUEUE_PUBLISHER_LIBS)
 
 $(TEST_JOB): $(TEST_JOB_OBJS)
 	g++ $(LDFLAGS) -g -o $@ $^ $(TEST_JOB_LIBS)

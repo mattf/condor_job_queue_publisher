@@ -16,8 +16,8 @@
  *
  ***************************************************************/
 
-#ifndef _JOBPUBLISHERJOBLOGCONSUMER_H
-#define _JOBPUBLISHERJOBLOGCONSUMER_H
+#ifndef _JOBQUEUEPUBLISHERJOBLOGCONSUMER_H
+#define _JOBQUEUEPUBLISHERJOBLOGCONSUMER_H
 
 #include "ClassAdLogReader.h"
 
@@ -28,11 +28,11 @@
 using namespace std;
 
 
-class JobPublisherClassAdLogConsumer: public ClassAdLogConsumer
+class JobQueuePublisherClassAdLogConsumer: public ClassAdLogConsumer
 {
 public:
-	JobPublisherClassAdLogConsumer();
-	~JobPublisherClassAdLogConsumer();
+	JobQueuePublisherClassAdLogConsumer();
+	~JobQueuePublisherClassAdLogConsumer();
 
 	void Reset();
 	bool NewClassAd(const char *key,
@@ -52,4 +52,4 @@ private:
 	ClassAdLogReader *m_reader;
 };
 
-#endif /* _JOBPUBLISHERJOBLOGCONSUMER_H */
+#endif /* _JOBQUEUEPUBLISHERJOBLOGCONSUMER_H */

@@ -29,13 +29,12 @@
 #include <syslog.h>
 
 #include <qpid/messaging/Connection.h>
-#include <qpid/messaging/MapContent.h>
 #include <qpid/messaging/Message.h>
 #include <qpid/messaging/Sender.h>
 #include <qpid/messaging/Session.h>
 
 #include "ClassAdLogReader.h"
-#include "JobPublisherClassAdLogConsumer.h"
+#include "JobQueuePublisherClassAdLogConsumer.h"
 
 #include "Globals.h"
 
@@ -145,7 +144,7 @@ int main(int argc, char *argv[])
 	config.interval = 15;
 	config.daemon = false;
 
-	openlog("job_publisher", LOG_PID|LOG_PERROR, LOG_DAEMON);
+	openlog("job_queue_publisher", LOG_PID|LOG_PERROR, LOG_DAEMON);
 
 	parse_args(argc, argv, config);
 
@@ -177,8 +176,8 @@ int main(int argc, char *argv[])
 		sender = session.createSender(config.address);
 	}
 
-	JobPublisherClassAdLogConsumer *consumer =
-		new JobPublisherClassAdLogConsumer();
+	JobQueuePublisherClassAdLogConsumer *consumer =
+		new JobQueuePublisherClassAdLogConsumer();
 	ClassAdLogReader *reader = new ClassAdLogReader(consumer);
 
 	reader->SetClassAdLogFileName(config.file.c_str());
