@@ -22,6 +22,7 @@
 #include <string>
 #include <string.h>
 #include <stdlib.h>
+#include <signal.h>
 
 #include <unistd.h>
 #include <getopt.h>
@@ -51,6 +52,11 @@
 using namespace qpid::messaging;
 using namespace qpid::types;
 
+bool shutdownRequest = false;
+
+static void sighup_handler(int);
+static void sigterm_handler(int);
+
 void Dump();
 
 void PublishJob(const string &key, Sender &sender);
@@ -68,6 +74,40 @@ usage(char *argv[])
 		   "[--interval <poll interval: 15>]\n",
 		   argv[0]);
 	exit(1);
+}
+
+void sighup_handler(int sig)
+{
+  char signalNumber[32];
+
+  // Reset the handler ...
+
+  signal(SIGHUP, sighup_handler);
+  syslog(LOG_ERR,
+    "job_queue_publisher: Received signal %d. Continuing ...",
+    sig);
+
+  sprintf(signalNumber, "%d", sig);
+//  JobQueuePublisher::Logger::getInstance().log(JobQueuePublisher::Logger::INFO, std::string("job_queue_publisher: Received signal [").append(signalNumber).append(" Continuing ..."));
+  return;
+}
+
+void sigterm_handler(int sig)
+{
+  char signalNumber[32];
+
+  // Reset the handler ...
+
+  signal(SIGTERM, sigterm_handler);
+  syslog(LOG_ERR,
+    "job_queue_publisher: Received signal %d. Continuing ...",
+    sig);
+
+  sprintf(signalNumber, "%d", sig);
+ 
+//  JobQueuePublisher::Logger::getInstance().log(JobQueuePublisher::Logger::INFO, std::string("job_queue_publisher: Received signal [").append(signalNumber).append(" Shutting down."));
+
+  shutdownRequest = false;
 }
 
 void
@@ -148,6 +188,9 @@ int main(int argc, char *argv[])
 	Sender sender;
 	Session session;
 
+	signal(SIGHUP, sighup_handler);
+	signal(SIGTERM, sigterm_handler);
+
 	config.broker = "amqp:tcp:127.0.0.1:5672";
 	config.interval = 15;
 	config.daemon = false;
@@ -193,7 +236,7 @@ int main(int argc, char *argv[])
 
 	JobQueuePublisher::CondorKeepAlive cka;
 
-	while (1) {
+	while (!shutdownRequest) {
 		switch (reader->Poll()) {
 		case POLL_FAIL:
 			syslog(LOG_ERR, "Polling failed, ignoring, will try again");
