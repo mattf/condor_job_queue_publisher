@@ -17,7 +17,6 @@
  ***************************************************************/
 
 #include <qpid/messaging/Connection.h>
-#include <qpid/messaging/MapView.h>
 #include <qpid/messaging/Message.h>
 #include <qpid/messaging/Receiver.h>
 #include <qpid/messaging/Session.h>
@@ -30,6 +29,7 @@
 
 using namespace std;
 using namespace qpid::messaging;
+using namespace qpid::types;
 
 void
 usage(char *argv[])
@@ -86,16 +86,17 @@ main(int argc, char *argv[])
 
 	cout << "config: address = " << address << "; broker = " << broker << endl;
 
-	Connection connection;
-	connection.open(broker);
-	Session session = connection.newSession();
+	Connection connection(broker);
+	connection.open();
+	Session session = connection.createSession();
 	Receiver receiver = session.createReceiver(address);
 	receiver.setCapacity(1024);
 
 	int count = 0;
 	while (1) {
 		Message message = receiver.fetch();
-		MapView content(message);
+		Variant::Map content;
+		decode(message, content);
 
 		string id = message.getSubject();
 
@@ -104,7 +105,7 @@ main(int argc, char *argv[])
 			break;
 		}
 
-		for (MapView::const_iterator i = content.begin();
+		for (qpid::types::Variant::Map::const_iterator i = content.begin();
 			 content.end() != i;
 			 i++) {
 			cout << id << " " << (*i).first << " " << (*i).second << endl;

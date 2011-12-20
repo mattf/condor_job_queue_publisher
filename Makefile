@@ -32,7 +32,7 @@ MEMORY_PERFORMANCE_OBJS=memory_performance.o
 
 SINK=sink
 SINK_OBJS=sink.o
-SINK_LIBS=-lqpidcommon -lqpidclient
+SINK_LIBS=-lqpidcommon -lqpidclient -lqpidtypes -lqpidmessaging
 
 all: $(JOB_QUEUE_PUBLISHER) $(TEST_JOB) $(MEMORY_PERFORMANCE) $(SINK)
 
