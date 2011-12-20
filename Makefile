@@ -20,7 +20,7 @@ CXXFLAGS=-g -D_NO_CONDOR_ -O2 -Ilib
 LDFLAGS=-pthread
 
 JOB_QUEUE_PUBLISHER=job_queue_publisher
-JOB_QUEUE_PUBLISHER_OBJS=job_queue_publisher_main.o JobQueuePublisherClassAdLogConsumer.o Job.o Globals.o Config.o lib/libclassadlogreader.a
+JOB_QUEUE_PUBLISHER_OBJS=job_queue_publisher_main.o JobQueuePublisherClassAdLogConsumer.o Job.o Globals.o Config.o CondorKeepAlive.o lib/libclassadlogreader.a
 JOB_QUEUE_PUBLISHER_LIBS=-lqpidcommon -lqpidclient -lqpidtypes -lqpidmessaging
 
 TEST_JOB=test_Job

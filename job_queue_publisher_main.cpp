@@ -42,6 +42,8 @@
 #include "ClassAdLogReader.h"
 #include "JobQueuePublisherClassAdLogConsumer.h"
 
+#include "CondorKeepAlive.h"
+
 #include "Globals.h"
 
 #include "Config.h"
@@ -189,6 +191,8 @@ int main(int argc, char *argv[])
 
 	reader->SetClassAdLogFileName(config.file.c_str());
 
+	JobQueuePublisher::CondorKeepAlive cka;
+
 	while (1) {
 		switch (reader->Poll()) {
 		case POLL_FAIL:
@@ -228,6 +232,7 @@ int main(int argc, char *argv[])
 		}
 
 		sleep(config.interval);
+		cka.sendKeepAlive();
 	}
 
 	consumer->Reset();
