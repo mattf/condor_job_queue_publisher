@@ -28,6 +28,8 @@
 
 #include <syslog.h>
 
+#include <errno.h>
+
 #include <qpid/messaging/Connection.h>
 #include <qpid/messaging/Message.h>
 #include <qpid/messaging/Sender.h>
