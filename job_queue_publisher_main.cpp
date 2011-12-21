@@ -351,7 +351,7 @@ void
 Dump()
 {
 	syslog(LOG_DEBUG, "***BEGIN DUMP***");
-	syslog(LOG_DEBUG, "Total number of jobs: %d", g_jobs.size());
+	syslog(LOG_DEBUG, "Total number of jobs: %du", (unsigned int) g_jobs.size());
 /*
 	string jobs = "Jobs: ";
 	for (JobCollectionType::const_iterator i = g_jobs.begin();
