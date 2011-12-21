@@ -265,7 +265,7 @@ int main(int argc, char *argv[])
 		for (JobSetType::const_iterator i = g_dirty_jobs.begin();
 			 g_dirty_jobs.end() != i;
 			 i++) {
-			if (!PublishJob((*i), sender)) {
+			if (!config.address.empty() && !PublishJob((*i), sender)) {
 				syslog(LOG_INFO, "Warning: Error sending dirty jobs! Checking connection.");
 				if (!connection.isOpen()) {
 					syslog(LOG_INFO, "Warning: Connection to the broker is closed! Re-opening connection.");
@@ -296,7 +296,7 @@ int main(int argc, char *argv[])
 		for (JobSetType::const_reverse_iterator i = g_delete_jobs.rbegin();
 			 g_delete_jobs.rend() != i;
 			 i++) {
-			if (!PublishJob((*i), sender)) {
+			if (!config.address.empty() && !PublishJob((*i), sender)) {
 				syslog(LOG_INFO, "Warning: Error sending dirty jobs! Checking connection.");
 				if (!connection.isOpen()) {
 					syslog(LOG_INFO, "Warning: Connection to the broker is closed! Re-opening connection.");
