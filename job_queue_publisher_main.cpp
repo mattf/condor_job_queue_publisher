@@ -59,7 +59,7 @@ static void sigterm_handler(int);
 
 void Dump();
 
-void PublishJob(const string &key, Sender &sender);
+bool PublishJob(const string &key, Sender &sender);
 
 void
 usage(char *argv[])
@@ -249,7 +249,28 @@ int main(int argc, char *argv[])
 		for (JobSetType::const_iterator i = g_dirty_jobs.begin();
 			 g_dirty_jobs.end() != i;
 			 i++) {
-			PublishJob((*i), sender);
+			if (!PublishJob((*i), sender)) {
+				syslog(LOG_INFO, "Warning: Error sending dirty jobs! Checking connection.");
+				if (!connection.isOpen()) {
+					syslog(LOG_INFO, "Warning: Connection to the broker is closed! Re-opening connection.");
+					int numTries = 0;
+					do {
+						try {
+							numTries++;
+							connection.open();
+							session = connection.createSession();
+							sender = session.createSender(config.address);
+							string msg = "Connection to ";
+							msg.append(config.address);
+							msg.append(" re-established!");
+							syslog(LOG_INFO, msg.c_str());
+						} catch(const std::exception& error) {
+							syslog(LOG_INFO, "Could not re-establish connection. Sleeping 5 seconds");
+							sleep(5);
+						}
+					} while (!connection.isOpen() && numTries != 5);
+				}
+			}
 		}
 		g_dirty_jobs.clear();
 
@@ -259,7 +280,28 @@ int main(int argc, char *argv[])
 		for (JobSetType::const_reverse_iterator i = g_delete_jobs.rbegin();
 			 g_delete_jobs.rend() != i;
 			 i++) {
-			PublishJob((*i), sender);
+			if (!PublishJob((*i), sender)) {
+				syslog(LOG_INFO, "Warning: Error sending dirty jobs! Checking connection.");
+				if (!connection.isOpen()) {
+					syslog(LOG_INFO, "Warning: Connection to the broker is closed! Re-opening connection.");
+					int numTries = 0;
+					do {
+						try {
+							numTries++;
+							connection.open();
+							session = connection.createSession();
+							sender = session.createSender(config.address);
+							string msg = "Connection to ";
+							msg.append(config.address);
+							msg.append(" re-established!");
+							syslog(LOG_INFO, msg.c_str());
+						} catch(const std::exception& error) {
+							syslog(LOG_INFO, "Could not re-establish connection. Sleeping 5 seconds");
+							sleep(5);
+						}
+					} while (!connection.isOpen() && numTries != 5);
+				}
+			}
 			g_jobs.erase((*i));
 		}
 		g_delete_jobs.clear();
@@ -335,7 +377,7 @@ Dump()
 	syslog(LOG_DEBUG, "***END DUMP***");
 }
 
-void
+bool
 PublishJob(const string &key, Sender &sender)
 {
 	if (!config.address.empty()) {
@@ -362,6 +404,12 @@ PublishJob(const string &key, Sender &sender)
 		}
 
 		encode(content, message);
-		sender.send(message);
+		try {
+			sender.send(message);
+			return true;
+		} catch(const std::exception& error) {
+			syslog(LOG_INFO, error.what());
+			return false;
+		}
 	}
 }
