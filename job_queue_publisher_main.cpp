@@ -428,4 +428,6 @@ PublishJob(const string &key, Sender &sender)
 			return false;
 		}
 	}
+
+	return false;
 }
