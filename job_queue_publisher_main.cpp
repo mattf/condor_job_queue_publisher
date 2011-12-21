@@ -223,9 +223,23 @@ int main(int argc, char *argv[])
 
 	Connection connection(config.broker);
 	if (!config.address.empty()) {
-		connection.open();
-		session = connection.createSession();
-		sender = session.createSender(config.address);
+		int numTries = 0;
+		do {
+			try {
+				numTries++;
+				connection.open();
+				session = connection.createSession();
+				sender = session.createSender(config.address);
+			} catch(const std::exception& error) {
+				syslog(LOG_INFO, "Could not establish connection. Sleeping for 5 seconds");
+				sleep(5);
+			}
+		} while (numTries != 5);
+
+		if (connection.isOpen() == false) {
+			syslog(LOG_INFO, "Issues connecting to broker. Shutting down Job Publisher.");
+			exit(1);
+		}
 	}
 
 	JobQueuePublisherClassAdLogConsumer *consumer =
