@@ -16,7 +16,7 @@
 # *
 # ***************************************************************/
 
-STD_CXXFLAGS= -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4
+STD_CXXFLAGS= -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -Werror
 CXXFLAGS=$(STD_CXXFLAGS) -D_NO_CONDOR_ -Ilib
 LDFLAGS=-pthread
 
