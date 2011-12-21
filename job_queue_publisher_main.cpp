@@ -252,6 +252,8 @@ int main(int argc, char *argv[])
 
 	while (!shutdownRequest) {
 		switch (reader->Poll()) {
+		case POLL_SUCCESS:
+			break;
 		case POLL_FAIL:
 			syslog(LOG_ERR, "Polling failed, ignoring, will try again");
 			break;
