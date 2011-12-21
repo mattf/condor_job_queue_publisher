@@ -13,7 +13,9 @@ namespace JobQueuePublisher {
     
     // Get the default value for CONCURRENCY_LIMIT_DEFAULT
     if (fp != NULL) {
-      fgets( buff, sizeof buff, fp );
+		if (!fgets( buff, sizeof buff, fp )) {
+			syslog(LOG_INFO, "fgets on condor_config_val pipe did not return data");
+		}
       std::string response = buff;
       if ( response.find("Not defined") != std::string::npos ) {
 	std::string msg;
