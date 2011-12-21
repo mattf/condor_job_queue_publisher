@@ -224,19 +224,21 @@ int main(int argc, char *argv[])
 	Connection connection(config.broker);
 	if (!config.address.empty()) {
 		int numTries = 0;
+		bool success = false;
 		do {
 			try {
 				numTries++;
 				connection.open();
 				session = connection.createSession();
 				sender = session.createSender(config.address);
+				success = true;
 			} catch(const std::exception& error) {
 				syslog(LOG_INFO, "Could not establish connection. Sleeping for 5 seconds");
 				sleep(5);
 			}
-		} while (numTries != 5);
+		} while (!success && numTries != 5);
 
-		if (connection.isOpen() == false) {
+		if (!success) {
 			syslog(LOG_INFO, "Issues connecting to broker. Shutting down Job Publisher.");
 			exit(1);
 		}
@@ -270,6 +272,7 @@ int main(int argc, char *argv[])
 				if (!connection.isOpen()) {
 					syslog(LOG_INFO, "Warning: Connection to the broker is closed! Re-opening connection.");
 					int numTries = 0;
+					bool success = false;
 					do {
 						try {
 							numTries++;
@@ -280,11 +283,17 @@ int main(int argc, char *argv[])
 							msg.append(config.address);
 							msg.append(" re-established!");
 							syslog(LOG_INFO, msg.c_str());
+							success = true;
 						} catch(const std::exception& error) {
 							syslog(LOG_INFO, "Could not re-establish connection. Sleeping 5 seconds");
 							sleep(5);
 						}
-					} while (!connection.isOpen() && numTries != 5);
+					} while (!success && numTries != 5);
+
+					if (!success) {
+						syslog(LOG_INFO, "Issues re-connecting to broker. Shutting down Job Publisher.");
+						exit(1);
+					}
 				}
 			}
 		}
@@ -301,6 +310,7 @@ int main(int argc, char *argv[])
 				if (!connection.isOpen()) {
 					syslog(LOG_INFO, "Warning: Connection to the broker is closed! Re-opening connection.");
 					int numTries = 0;
+					bool success = false;
 					do {
 						try {
 							numTries++;
@@ -311,11 +321,17 @@ int main(int argc, char *argv[])
 							msg.append(config.address);
 							msg.append(" re-established!");
 							syslog(LOG_INFO, msg.c_str());
+							success = true;
 						} catch(const std::exception& error) {
 							syslog(LOG_INFO, "Could not re-establish connection. Sleeping 5 seconds");
 							sleep(5);
 						}
-					} while (!connection.isOpen() && numTries != 5);
+					} while (!success && numTries != 5);
+
+					if (!success) {
+						syslog(LOG_INFO, "Issues re-connecting to broker. Shutting down Job Publisher.");
+						exit(1);
+					}
 				}
 			}
 			g_jobs.erase((*i));
