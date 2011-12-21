@@ -24,13 +24,17 @@
 #include <assert.h> // for assert
 #include <errno.h> // for errno
 #include <syslog.h> // for syslog, LOG_ERR
+const char *EMPTY_CLASSAD_TYPE_NAME = "(empty)"; // normally in classad_log.h/cpp
+#define ASSERT(x) assert(x)
 #else
 #include "condor_common.h"
 #include "condor_io.h"
+extern const char *EMPTY_CLASSAD_TYPE_NAME; // defined in classad_log.cpp
 #endif
 
 #include "ClassAdLogEntry.h"
 #include "ClassAdLogParser.h"
+#include "log.h"
 
 /***** Prevent calling free multiple times in this code *****/
 /* This fixes bugs where we would segfault when reading in
@@ -55,6 +59,7 @@ ClassAdLogParser::ClassAdLogParser()
 {
 	log_fp = NULL;
 	nextOffset = 0;
+	job_queue_name[0] = '\0';
 }
 
 ClassAdLogParser::~ClassAdLogParser()
@@ -119,7 +124,7 @@ ClassAdLogParser::openFile() {
 #ifdef _NO_CONDOR_
     log_fp = fopen(job_queue_name, "r");
 #else
-    log_fp = safe_fopen_wrapper(job_queue_name, "r");
+    log_fp = safe_fopen_wrapper_follow(job_queue_name, "r");
 #endif
 
     if (log_fp == NULL) {
@@ -160,17 +165,19 @@ ClassAdLogParser::readLogEntry(int &op_type)
 	int	rval;
 
     // move to the current offset
-    if (fseek(log_fp, nextOffset, SEEK_SET) != 0) {
+    if (log_fp && fseek(log_fp, nextOffset, SEEK_SET) != 0) {
         fclose(log_fp);
         log_fp = NULL;
         return FILE_READ_EOF;
     }
 
-    rval = readHeader(log_fp, op_type);
-    if (rval < 0) {
-        fclose(log_fp);
-        log_fp = NULL;
-        return FILE_READ_EOF;
+    if(log_fp) {
+	    rval = readHeader(log_fp, op_type);
+	    if (rval < 0) {
+		    fclose(log_fp);
+		    log_fp = NULL;
+		    return FILE_READ_EOF;
+	    }
     }
 
 		// initialize of current & last ClassAd Log Entry objects
@@ -181,34 +188,36 @@ ClassAdLogParser::readLogEntry(int &op_type)
 
 
 		// read a ClassAd Log Entry Body
-	switch(op_type) {
-	    case CondorLogOp_LogHistoricalSequenceNumber:
-            rval = readLogHistoricalSNBody(log_fp);
-			break;
-	    case CondorLogOp_NewClassAd:
-            rval = readNewClassAdBody(log_fp);
-			break;
-	    case CondorLogOp_DestroyClassAd:
-            rval = readDestroyClassAdBody(log_fp);
-			break;
-	    case CondorLogOp_SetAttribute:
-            rval = readSetAttributeBody(log_fp);
-			break;
-	    case CondorLogOp_DeleteAttribute:
-            rval = readDeleteAttributeBody(log_fp);
-			break;
-		case CondorLogOp_BeginTransaction:
-            rval = readBeginTransactionBody(log_fp);
-			break;
-		case CondorLogOp_EndTransaction:
-            rval = readEndTransactionBody(log_fp);
-			break;
-	    default:
-            fclose(log_fp);
-            log_fp = NULL;
-		    return FILE_READ_ERROR;
-			break;
-	}
+	if(log_fp) {
+		switch(op_type) {
+		    case CondorLogOp_LogHistoricalSequenceNumber:
+		    rval = readLogHistoricalSNBody(log_fp);
+				break;
+		    case CondorLogOp_NewClassAd:
+		    rval = readNewClassAdBody(log_fp);
+				break;
+		    case CondorLogOp_DestroyClassAd:
+		    rval = readDestroyClassAdBody(log_fp);
+				break;
+		    case CondorLogOp_SetAttribute:
+		    rval = readSetAttributeBody(log_fp);
+				break;
+		    case CondorLogOp_DeleteAttribute:
+		    rval = readDeleteAttributeBody(log_fp);
+				break;
+			case CondorLogOp_BeginTransaction:
+		    rval = readBeginTransactionBody(log_fp);
+				break;
+			case CondorLogOp_EndTransaction:
+		    rval = readEndTransactionBody(log_fp);
+				break;
+		    default:
+		    fclose(log_fp);
+		    log_fp = NULL;
+			    return FILE_READ_ERROR;
+				break;
+		}
+	} else return FILE_READ_ERROR;
 
 	if (rval < 0) {
 
@@ -383,11 +392,21 @@ ClassAdLogParser::readNewClassAdBody(FILE *fp)
 		return rval;
 	}
 	rval1 = readword(fp, curCALogEntry.mytype);
+	if( curCALogEntry.mytype && strcmp(curCALogEntry.mytype,EMPTY_CLASSAD_TYPE_NAME)==0 ) {
+		free(curCALogEntry.mytype);
+		curCALogEntry.mytype = strdup("");
+		ASSERT( curCALogEntry.mytype );
+	}
 	if (rval1 < 0) {
 		return rval1;
 	}
 	rval += rval1;
 	rval1 = readword(fp, curCALogEntry.targettype);
+	if( curCALogEntry.targettype && strcmp(curCALogEntry.targettype,EMPTY_CLASSAD_TYPE_NAME)==0 ) {
+		free(curCALogEntry.targettype);
+		curCALogEntry.targettype = strdup("");
+		ASSERT( curCALogEntry.targettype );
+	}
 	if (rval1 < 0) {
 		return rval1;
 	}
@@ -533,88 +552,11 @@ ClassAdLogParser::readHeader(FILE *fp, int& op_type)
 int
 ClassAdLogParser::readword(FILE *fp, char * &str)
 {
-	int		i, bufsize = 1024;
-
-	char	*buf = (char *)malloc(bufsize);
-
-	// ignore leading whitespace but don't pass newline
-	do {
-		buf[0] = fgetc( fp );
-		if( buf[0] == EOF && !feof( fp ) ) {
-			free( buf );
-			return( -1 );
-		}
-	} while (isspace(buf[0]) && buf[0]!=EOF && buf[0]!='\n' );
-
-	// read until whitespace
-	for (i = 1; !isspace(buf[i-1]) && buf[i-1]!='\0' && buf[i-1]!=EOF; i++) {
-		if (i == bufsize) {
-			buf = (char *)realloc(buf, bufsize*2);
-			assert(buf);
-			bufsize *= 2;
-		} 
-		buf[i] = fgetc( fp );
-		if( buf[i] == EOF && !feof( fp ) ) {
-			free( buf );
-			return( -1 );
-		}
-	}
-
-		// no input is also an error
-	if( feof( fp ) || i==1 ) {
-		free( buf );
-		return( -1 );
-	}
-
-	buf[i-1] = '\0';
-
-	if(str != NULL) {
-		free(str);
-	}
-	str = strdup(buf);
-	free(buf);
-	return i-1;
+	return LogRecord::readword(fp,str);
 }
-
-
 
 int
 ClassAdLogParser::readline(FILE *fp, char * &str)
 {
-	int		i, bufsize = 4096;
-	char	*buf = (char *)malloc(bufsize);
-
-	// ignore leading whitespace but don't pass newline
-	do {
-		buf[0] = fgetc( fp );
-		if( buf[0] == EOF && !feof( fp ) ) {
-			free( buf );
-			return( -1 );
-		}
-	} while( isspace(buf[0]) && buf[0] != EOF && buf[0] != '\n' );
-
-	// read until newline
-	for (i = 1; buf[i-1]!='\n' && buf[i-1] != '\0' && buf[i-1] != EOF; i++) {
-		if (i == bufsize) {
-			buf = (char *)realloc(buf, bufsize*2);
-			assert(buf);
-			bufsize *= 2;
-		} 
-		buf[i] = fgetc( fp );
-		if( buf[i] == EOF && !feof( fp ) ) {
-			free( buf );
-			return( -1 );
-		}
-	}
-
-		// treat no input as newline
-	if( feof( fp ) || i==1 ) {
-		free( buf );
-		return( -1 );
-	}
-
-	buf[i-1] = '\0';
-	str = strdup(buf);
-	free(buf);
-	return i-1;
+	return LogRecord::readline(fp,str);
 }

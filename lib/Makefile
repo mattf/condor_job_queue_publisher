@@ -19,7 +19,7 @@
 CXXFLAGS=-g -D_NO_CONDOR_ -O2
 
 LIB=libclassadlogreader.a
-LIB_OBJS=ClassAdLogReader.o ClassAdLogEntry.o ClassAdLogProber.o ClassAdLogParser.o
+LIB_OBJS=ClassAdLogReader.o ClassAdLogEntry.o ClassAdLogProber.o ClassAdLogParser.o log.o
 
 all: $(LIB)
 
