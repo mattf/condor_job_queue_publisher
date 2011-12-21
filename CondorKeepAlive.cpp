@@ -48,8 +48,6 @@ namespace JobQueuePublisher {
 
     std::ifstream file; // indata is like cin
     std::string line;
-    const int LINE_LENGTH = 1024;
-    char str[LINE_LENGTH];
     
 //    JobQueuePublisher::Logger::getInstance().log(JobQueuePublisher::Logger::INFO, std::string("Opening file: ").append(addressDir_));
     syslog(LOG_INFO, std::string("Opening file: ").append(addressDir_).c_str());
