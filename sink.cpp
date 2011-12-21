@@ -50,7 +50,7 @@ main(int argc, char *argv[])
 	static struct option options[] = {
 		{"broker", 1, NULL, 'b'},
 		{"address", 1, NULL, 'a'},
-		{NULL, NULL, NULL, NULL}
+		{NULL, 0, NULL, 0}
 	};
 
 	int c;
