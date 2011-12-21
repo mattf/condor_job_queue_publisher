@@ -73,7 +73,7 @@ ClassAdLogReader::Poll() {
 		return POLL_FAIL;
 	}
 
-	probe_st = prober.probe(parser.getLastCALogEntry(),parser.getFileDescriptor());
+	probe_st = prober.probe(parser.getLastCALogEntry(),parser.getFilePointer());
 
 	bool success = true;
 	switch(probe_st) {
@@ -152,7 +152,7 @@ ClassAdLogReader::IncrementalLoad()
  */
 bool
 ClassAdLogReader::ProcessLogEntry(ClassAdLogEntry *log_entry,
-							  ClassAdLogParser */*caLogParser*/)
+							  ClassAdLogParser * /*caLogParser*/)
 {
 
 	switch(log_entry->op_type) {

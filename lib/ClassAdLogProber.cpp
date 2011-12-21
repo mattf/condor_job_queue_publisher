@@ -47,6 +47,7 @@ ClassAdLogProber::ClassAdLogProber()
 	cur_probed_size = 0;
 	cur_probed_seq_num = 0;
 	cur_probed_creation_time = 0;
+	job_queue_name[0] = '\0';
 }
 
 //! destructor
@@ -134,11 +135,18 @@ ClassAdLogProber::getCurProbedCreationTime() {
 //! probe job_queue.log file
 ProbeResultType
 ClassAdLogProber::probe(ClassAdLogEntry *curCALogEntry,
-			  int job_queue_fd)
+			  FILE * job_queue_fp)
 {
 	FileOpErrCode   st;
 	int op_type;
 	struct stat filestat;
+	int job_queue_fd = fileno(job_queue_fp);
+	//TODO: uncomment and possibly change
+	/* 
+	if (job_queue_fd == -1) {
+		return PROBE_ERROR;
+	}
+	*/
 
 	//TODO: should use condor's StatInfo instead.
 	if (fstat(job_queue_fd, &filestat) == -1)
@@ -163,7 +171,7 @@ ClassAdLogProber::probe(ClassAdLogEntry *curCALogEntry,
 
 	ClassAdLogParser caLogParser;
 	
-	caLogParser.setFileDescriptor(job_queue_fd);
+	caLogParser.setFilePointer(job_queue_fp);
 	caLogParser.setNextOffset(0);
 	st = caLogParser.readLogEntry(op_type);
 

@@ -23,6 +23,7 @@
 #ifdef _NO_CONDOR_
 #include <time.h> // for time_t
 #include <unistd.h> // for size_t
+#include <stdio.h> // for FILE*
 #else
 #include "condor_common.h"
 #endif
@@ -52,7 +53,7 @@ public:
 
 	//! probe job_queue.log file
 	ProbeResultType probe(ClassAdLogEntry *curCALogEntry,
-						  int job_queue_fd);
+						  FILE* job_queue_fp);
 
 	//! update state information about size of log file last probed etc.
 	//! Call this after successfully responding to probe() result.
@@ -78,7 +79,7 @@ public:
 
 private:
 		// information about a job_queue.log file and polling state
-	char			job_queue_name[_POSIX_PATH_MAX]; //!< job queue file path
+	char			job_queue_name[PATH_MAX]; //!< job queue file path
 		// stored metadata in DB
 	long int		last_mod_time;	//!< last modification time
 	long int		last_size;	//!< last size
