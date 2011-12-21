@@ -21,16 +21,19 @@
 #include <string>
 #include <map>
 
+#ifdef HAVE_BOOST_FLYWEIGHT
 #include <boost/flyweight.hpp>
 using namespace ::boost::flyweights;
+typedef flyweight<std::string> fstring;
+#else
+typedef std::string fstring;
+#endif
 
 using namespace std;
 
-//typedef string Name;
-//typedef string Value;
+typedef fstring Name;
+typedef fstring Value;
 typedef string Id;
-typedef flyweight<string> Name;
-typedef flyweight<string> Value;
 typedef map<Name, Value> Job;
 typedef map<Id, Job> Jobs;
 
@@ -43,8 +46,7 @@ main(int argc, char *argv[])
 	data.open(argv[1], ios::in);
 
 	char _value[8192];
-//	string id, name, value;
-	flyweight<string> id, name, value;
+	fstring id, name, value;
 	while (!data.eof()) {
 		data >> id >> name; data.getline(_value, 8192); value = _value;
 //		cout << "id: " << id << " name: " << name << " value: " << value << endl;
@@ -53,7 +55,7 @@ main(int argc, char *argv[])
 
 	cout << "DONE" << endl;
 
-//	sleep(120);
+	sleep(120);
 
 	return 0;
 }

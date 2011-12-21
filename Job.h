@@ -23,20 +23,25 @@
 #include <map>
 #include <set>
 
+#ifdef HAVE_BOOST_FLYWEIGHT
 #include <boost/flyweight.hpp>
+using namespace ::boost;
+using namespace ::boost::flyweights;
+#endif
 
 using std::string;
 using std::map;
 using std::set;
 
-using namespace ::boost;
-using namespace ::boost::flyweights;
-
 class Job
 {
 public:
 //	typedef map<const string, Attribute> AttributeMapType;
+#ifdef HAVE_BOOST_FLYWEIGHT
 	typedef flyweight<string> fstring;
+#else
+	typedef string fstring;
+#endif
 	typedef map<fstring, fstring> AttributeMapType;
 
 	Job(const string _key,
