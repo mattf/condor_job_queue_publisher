@@ -1,7 +1,7 @@
 
 Name: condor-job-queue-publisher
 Version: 0.44
-Release: 0
+Release: 1
 Summary: Publish a Condor schedd job queue to an AMQP queue
 
 Group: System Environment/Daemons
@@ -30,6 +30,8 @@ make install DESTDIR=%{buildroot}
 rm $RPM_BUILD_ROOT/%{_bindir}/memory_performance
 rm $RPM_BUILD_ROOT/%{_bindir}/sink
 rm $RPM_BUILD_ROOT/%{_bindir}/test_Job
+rm $RPM_BUILD_ROOT/%{_datadir}/condor-job-queue-publisher/job_queue.log.sh
+rm $RPM_BUILD_ROOT/%{_datadir}/condor-job-queue-publisher/test_job_queue_publisher.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -39,6 +41,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/condor_job_queue_publisher
 
 %changelog
+* Thu Dec 22 2011 Brian Bockelman <bbockelm@cse.unl.edu> - 0.44-1
+- Remove unnecessary dep.  Fixed linker issues on Fedora.
+
 * Mon Dec 19 2011 Brian Bockelman <bbockelm@cse.unl.edu> - 0.43-1
 - Initial packaging of job queue publisher.
 
