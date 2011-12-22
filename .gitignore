@@ -4,7 +4,6 @@ lib/*.o
 Makefile
 Makefile.in
 aclocal.m4
-autogen.sh
 autom4te.cache
 *.tar.gz
 ltmain.sh
