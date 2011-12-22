@@ -55,5 +55,6 @@ dist_pkgdata_SCRIPTS = test_job_queue_publisher.sh job_queue.log.sh
 test: sink condor_job_queue_publisher test_Job
 	@echo "NOTE: You better have a broker running with a queue named jp-test-queue"
 	@echo " Try: service qpidd start && qpid-config add queue jp-test-queue"
+	./test_Job
 	sh ./test_job_queue_publisher.sh --address=jp-test-queue
 
