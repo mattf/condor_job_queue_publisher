@@ -30,7 +30,7 @@ sh ./job_queue.log.sh $FILE
 CREATE_COUNT=$(grep ^101 $FILE | wc -l)
 DESTROY_COUNT=$(grep ^102 $FILE | wc -l)
 
-./job_queue_publisher --dump --file $FILE $ADDRESS > $FILE.tmp 2>&1
+./condor_job_queue_publisher --dump --file $FILE $ADDRESS > $FILE.tmp 2>&1
 
 TOTAL=$(grep "Total number of jobs" $FILE.tmp | sed 's/.*Total.*: \(.*\)/\1/')
 
