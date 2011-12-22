@@ -21,6 +21,8 @@
 #include <string>
 #include <map>
 
+#include "config.h"
+
 #ifdef HAVE_BOOST_FLYWEIGHT
 #include <boost/flyweight.hpp>
 using namespace ::boost::flyweights;

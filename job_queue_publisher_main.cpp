@@ -121,7 +121,7 @@ parse_args(int argc, char *argv[], Config &config)
 		{"address", 1, NULL, 'a'},
 		{"interval", 1, NULL, 'i'},
 		{"dump", 0, NULL, 'u'},
-		{NULL, NULL, NULL, NULL}
+		{NULL, 0, NULL, 0}
 	};
 
 	int c;

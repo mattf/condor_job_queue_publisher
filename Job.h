@@ -19,6 +19,7 @@
 #ifndef _JOB_H
 #define _JOB_H
 
+#include "config.h"
 #include <string>
 #include <map>
 #include <set>
