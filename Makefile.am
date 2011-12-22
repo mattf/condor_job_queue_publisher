@@ -25,25 +25,28 @@ condor_job_queue_publisher_SOURCES = \
 	lib/ClassAdLogParser.h \
 	lib/log.h
 
-condor_job_queue_publisher_LDFLAGS=-lqpidmessaging -lqpidtypes 
+condor_job_queue_publisher_LDFLAGS=-lqpidmessaging -lqpidtypes -lpthread
 
 memory_performance_SOURCES = \
 	memory_performance.cpp
+
+memory_performance_LDFLAGS = -lpthread
 
 test_Job_SOURCES = \
 	test_Job.cpp \
 	Job.cpp \
 	Job.h
 
+test_Job_LDFLAGS = -lpthread
+
 sink_SOURCES = \
 	sink.cpp \
 	Job.cpp \
 	Job.h
 
-sink_LDFLAGS = -lqpidmessaging -lqpidtypes
+sink_LDFLAGS = -lqpidmessaging -lqpidtypes -lpthread
 
 AM_CXXFLAGS = -Ilib -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -Werror -D_NO_CONDOR_ 
-AM_LDFLAGS = -pthread
 
 EXTRA_DIST = autogen.sh condor-job-queue-publisher.spec
 
