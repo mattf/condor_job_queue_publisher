@@ -1,7 +1,7 @@
 
 Name: condor-job-queue-publisher
-Version: 0.43
-Release: 1
+Version: 0.44
+Release: 0
 Summary: Publish a Condor schedd job queue to an AMQP queue
 
 Group: System Environment/Daemons
@@ -10,7 +10,7 @@ URL: https://fedorahosted.org/grid/wiki/CondorJobQueuePublisher
 Source0: %{name}-%{version}.tar.gz
 
 BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
-BuildRequires: boost-devel qpid-cpp-client-devel log4cpp-devel
+BuildRequires: boost-devel qpid-cpp-client-devel
 
 %description
 %{summary}

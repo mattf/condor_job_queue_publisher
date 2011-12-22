@@ -25,7 +25,7 @@ condor_job_queue_publisher_SOURCES = \
 	lib/ClassAdLogParser.h \
 	lib/log.h
 
-condor_job_queue_publisher_LDFLAGS=-lqpidmessaging
+condor_job_queue_publisher_LDFLAGS=-lqpidmessaging -lqpidtypes 
 
 memory_performance_SOURCES = \
 	memory_performance.cpp
@@ -40,7 +40,7 @@ sink_SOURCES = \
 	Job.cpp \
 	Job.h
 
-sink_LDFLAGS = -lqpidmessaging
+sink_LDFLAGS = -lqpidmessaging -lqpidtypes
 
 AM_CXXFLAGS = -Ilib -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -Werror -D_NO_CONDOR_ 
 AM_LDFLAGS = -pthread
@@ -52,6 +52,5 @@ dist_pkgdata_SCRIPTS = test_job_queue_publisher.sh job_queue.log.sh
 test: sink condor_job_queue_publisher test_Job
 	@echo "NOTE: You better have a broker running with a queue named jp-test-queue"
 	@echo " Try: service qpidd start && qpid-config add queue jp-test-queue"
-	./test_job_queue_publisher.sh
 	sh ./test_job_queue_publisher.sh --address=jp-test-queue
 
