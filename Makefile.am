@@ -9,6 +9,7 @@ condor_job_queue_publisher_SOURCES = \
 	Globals.cpp \
 	Config.cpp \
 	CondorKeepAlive.cpp \
+	FileWatcher.cpp \
 	lib/ClassAdLogReader.cpp \
 	lib/ClassAdLogEntry.cpp \
 	lib/ClassAdLogProber.cpp \
@@ -19,6 +20,7 @@ condor_job_queue_publisher_SOURCES = \
 	Globals.h \
 	Config.h \
 	CondorKeepAlive.h \
+	FileWatcher.h \
 	lib/ClassAdLogReader.h \
 	lib/ClassAdLogEntry.h \
 	lib/ClassAdLogProber.h \

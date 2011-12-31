@@ -90,7 +90,7 @@ cat >> job_queue.log.gen-tiny << EOF
 103 1.0 Attr1 "Child"
 EOF
 
-./job_queue_publisher --file job_queue.log.gen-tiny --dump > job_queue_publisher.out-tiny 2>&1
+./condor_job_queue_publisher --file job_queue.log.gen-tiny --dump > job_queue_publisher.out-tiny 2>&1
 grep "=> 1.0 Attr1 \"Child\"" job_queue_publisher.out-tiny > /dev/null 2>&1
 if [ $? -eq 0 ]; then
    echo "SUCCESS: job_queue_publisher properly overrides parent attributes"

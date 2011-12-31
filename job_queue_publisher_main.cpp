@@ -32,6 +32,7 @@
 #include <errno.h>
 
 #include <sstream>
+#include <memory>
 
 #include <qpid/messaging/Connection.h>
 #include <qpid/messaging/Message.h>
@@ -40,6 +41,7 @@
 
 #include <qpid/types/Variant.h>
 
+#include "FileWatcher.h"
 #include "ClassAdLogReader.h"
 #include "JobQueuePublisherClassAdLogConsumer.h"
 
@@ -252,6 +254,17 @@ int main(int argc, char *argv[])
 
 	JobQueuePublisher::CondorKeepAlive cka;
 
+	FileWatcher *watcherp = NULL;
+	try {
+		watcherp = new FileWatcher(config.file, config.interval);
+	} catch (const std::exception& error) {
+		syslog(LOG_INFO, "Could not initialize file watcher: %s.", error.what());
+		exit(1);
+	}
+	// Note: due to exit above, watcherp may not be NULL.
+	std::auto_ptr<FileWatcher> watcher_ap(watcherp);
+	FileWatcher &watcher = *watcherp;
+
 	while (!shutdownRequest) {
 		switch (reader->Poll()) {
 		case POLL_SUCCESS:
@@ -348,7 +361,8 @@ int main(int argc, char *argv[])
 			break;
 		}
 
-		sleep(config.interval);
+		watcher.pause();
+
 		cka.sendKeepAlive();
 	}
 

@@ -25,7 +25,7 @@ LDFLAGS=$SAVED_LDFLAGS
 AC_LANG_POP([C++])
 
 # Checks for header files.
-AC_CHECK_HEADERS([syslog.h unistd.h])
+AC_CHECK_HEADERS([syslog.h unistd.h sys/inotify.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
