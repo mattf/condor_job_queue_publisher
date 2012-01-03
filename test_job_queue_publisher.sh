@@ -30,7 +30,7 @@ sh ./job_queue.log.sh $FILE
 CREATE_COUNT=$(grep ^101 $FILE | wc -l)
 DESTROY_COUNT=$(grep ^102 $FILE | wc -l)
 
-./condor_job_queue_publisher --dump --file $FILE $ADDRESS > $FILE.tmp 2>&1
+./condor_job_queue_publisher --dump 1 --file $FILE $ADDRESS > $FILE.tmp 2>&1
 
 TOTAL=$(grep "Total number of jobs" $FILE.tmp | sed 's/.*Total.*: \(.*\)/\1/')
 
@@ -78,6 +78,15 @@ if [ ! -z "$ADDRESS" ]; then
       echo "FAIL: ^^ difference between sink and job_queue_publisher"
       FAIL=1
    fi
+
+   ./sink_continuous $ADDRESS > sink_continuous.out 2>&1
+   if [ $? -eq 0 ]; then
+      echo "SUCCESS: Continuous sink"
+   else
+      echo "FAIL: Continuous sink failed."
+      FAIL=1
+   fi
+
 fi
 
 cat >> job_queue.log.gen-tiny << EOF
@@ -90,7 +99,7 @@ cat >> job_queue.log.gen-tiny << EOF
 103 1.0 Attr1 "Child"
 EOF
 
-./condor_job_queue_publisher --file job_queue.log.gen-tiny --dump > job_queue_publisher.out-tiny 2>&1
+./condor_job_queue_publisher --file job_queue.log.gen-tiny --dump 1 > job_queue_publisher.out-tiny 2>&1
 grep "=> 1.0 Attr1 \"Child\"" job_queue_publisher.out-tiny > /dev/null 2>&1
 if [ $? -eq 0 ]; then
    echo "SUCCESS: job_queue_publisher properly overrides parent attributes"
@@ -99,5 +108,6 @@ else
    echo "FAIL: job_queue_publisher does not override parent attributes in children"
    FAIL=1
 fi
+
 
 exit $FAIL

@@ -35,7 +35,7 @@ void
 usage(char *argv[])
 {
 	cerr <<	"usage: " << argv[0]
-		 << "--address <queue or topic> "
+		 << " --address <queue or topic> "
 		 << "[--broker <broker url>]"
 		 << endl;
 	exit(1);

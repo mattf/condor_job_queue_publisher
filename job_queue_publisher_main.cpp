@@ -122,7 +122,7 @@ parse_args(int argc, char *argv[], Config &config)
 		{"broker", 1, NULL, 'b'},
 		{"address", 1, NULL, 'a'},
 		{"interval", 1, NULL, 'i'},
-		{"dump", 0, NULL, 'u'},
+		{"dump", 1, NULL, 'u'},
 		{NULL, 0, NULL, 0}
 	};
 
@@ -155,7 +155,7 @@ parse_args(int argc, char *argv[], Config &config)
 			}
 			break;
 		case 'u':
-			config.dump = true;
+			config.dump = (int) strtol(optarg, NULL, 10);
 			break;
 		case ':':
 			syslog(LOG_ERR, "%s requires an argument\n", argv[optind - 1]);
@@ -196,6 +196,7 @@ int main(int argc, char *argv[])
 	config.broker = "amqp:tcp:127.0.0.1:5672";
 	config.interval = 15;
 	config.daemon = false;
+	config.dump = 0;
 
 	openlog("job_queue_publisher", LOG_PID|LOG_PERROR, LOG_DAEMON);
 
@@ -261,7 +262,7 @@ int main(int argc, char *argv[])
 		syslog(LOG_INFO, "Could not initialize file watcher: %s.", error.what());
 		exit(1);
 	}
-	// Note: due to exit above, watcherp may not be NULL.
+	// Note: due to exit above, watcherp will not be NULL.
 	std::auto_ptr<FileWatcher> watcher_ap(watcherp);
 	FileWatcher &watcher = *watcherp;
 
@@ -354,11 +355,15 @@ int main(int argc, char *argv[])
 		if (config.dump) {
 			Dump();
 			if (!config.address.empty()) {
+				syslog(LOG_INFO, "Sending DONE message via broker.");
 				Message message;
 				message.setSubject("DONE");
 				sender.send(message);
 			}
-			break;
+			config.dump--;
+			if (config.dump == 0) {
+				break;
+			}
 		}
 
 		watcher.pause();

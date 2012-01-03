@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign
 ## top directory
-bin_PROGRAMS = condor_job_queue_publisher test_Job sink memory_performance
+bin_PROGRAMS = condor_job_queue_publisher test_Job sink memory_performance sink_continuous
 
 condor_job_queue_publisher_SOURCES = \
 	job_queue_publisher_main.cpp \
@@ -48,13 +48,20 @@ sink_SOURCES = \
 
 sink_LDFLAGS = -lqpidmessaging -lqpidtypes -lpthread
 
+sink_continuous_SOURCES = \
+	sink_continuous.cpp \
+	Job.cpp \
+	Job.h
+
+sink_continuous_LDFLAGS = -lqpidmessaging -lqpidtypes -lpthread
+
 AM_CXXFLAGS = -Ilib -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector --param=ssp-buffer-size=4 -Werror -D_NO_CONDOR_ 
 
 EXTRA_DIST = autogen.sh condor-job-queue-publisher.spec
 
 dist_pkgdata_SCRIPTS = test_job_queue_publisher.sh job_queue.log.sh
 
-test: sink condor_job_queue_publisher test_Job
+test: sink sink_continuous condor_job_queue_publisher test_Job
 	@echo "NOTE: You better have a broker running with a queue named jp-test-queue"
 	@echo " Try: service qpidd start && qpid-config add queue jp-test-queue"
 	./test_Job

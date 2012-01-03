@@ -22,3 +22,7 @@ config.guess
 config.h*
 job_queue_publisher
 install-sh
+sink_continuous
+sink_continuous.out
+job_queue.log.gen
+job_queue.log.short.gen

@@ -40,7 +40,7 @@ struct Config
 	std::string address;
 	int interval;
 	TriggersType triggers;
-	bool dump;
+	int dump;
 };
 
 extern Config config;
