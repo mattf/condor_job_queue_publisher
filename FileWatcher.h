@@ -1,6 +1,6 @@
 /***************************************************************
  *
- * Copyright (C) 2010 Red Hat, Inc.
+ * Copyright (C) 2011 University of Nebraska-Lincoln
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you
  * may not use this file except in compliance with the License.  You may
@@ -16,31 +16,41 @@
  *
  ***************************************************************/
 
-#include <set>
-
 #include <string>
+#include <exception>
 
-#include <strings.h>
+class FileWatcherException : public std::exception {
 
-struct caseltstr
-{
-	bool operator()(const char *s1, const char *s2) const
+public:
+	FileWatcherException(const std::string &what_str) : m_what(what_str) {}
+	~FileWatcherException() throw (){}
+
+	virtual const char * what() const throw()
 	{
-		return strcasecmp(s1, s2) < 0;
+		return m_what.c_str();
 	}
+
+private:
+	const std::string m_what;
+
 };
 
-struct Config
-{
-	typedef std::set<const char *, caseltstr> TriggersType;
+class FileWatcher {
 
-	std::string file;
-	bool daemon;
-	std::string broker;
-	std::string address;
-	int interval;
-	TriggersType triggers;
-	int dump;
+public:
+	FileWatcher(const std::string &location, unsigned sleep_seconds);
+	~FileWatcher();
+
+	/*
+	 * Pause for sleep_seconds or until our file is modified.
+	 */
+	void pause();
+
+private:
+
+	bool GetEvent();
+	unsigned m_sleep_secs;
+	int m_fd, m_wd;
+	const std::string m_location;
+
 };
-
-extern Config config;
